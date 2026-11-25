@@ -34,39 +34,29 @@ const SectionTitle = ({ children, className = "" }) => (
 );
 
 export const BrandStrip = () => (
-  <section className="home-brand-strip" aria-label="Our focus">
-    <SectionLabel>Good creative. Real growth.</SectionLabel>
+  <section className="home-brand-strip" aria-label="Brands we work with">
+    <SectionLabel>Brands we work with</SectionLabel>
     <Marquee duration={32} pauseOnHover className="home-brand-marquee">
-      {["Strategy", "Performance", "Creators", "Culture", "Conversion"].map(
-        (word) => (
-          <span className="home-brand-word" key={word}>
-            {word}
-            <img src="/svgs/icon.svg" width="28" height="28" alt="" />
-          </span>
-        ),
-      )}
+      {/* Repeated so the strip is always full */}
+      {[...CASE_STUDIES, ...CASE_STUDIES, ...CASE_STUDIES].map(({ client }, i) => (
+        <span className="home-brand-word" key={`${client}-${i}`}>
+          {client}
+          <img src="/svgs/icon.svg" width="28" height="28" alt="" />
+        </span>
+      ))}
     </Marquee>
   </section>
 );
 
-const projectImages = [
-  {
-    src: "/imgs/home/fashion.jpg",
-    alt: "Clothing collection on a studio rack",
-  },
-  {
-    src: "/imgs/home/coffee.jpg",
-    alt: "Orange coffee cup against a turquoise backdrop",
-  },
-  {
-    src: "/imgs/home/skincare.jpg",
-    alt: "Skincare bottles in a softly lit product composition",
-  },
-  {
-    src: "/imgs/home/workspace.jpg",
-    alt: "A laptop and monitor in an evening workspace",
-  },
-];
+// Card visual: a screenshot if the brand has one (`image`), otherwise its logo on a coloured card
+const ProjectVisual = ({ project }) =>
+  project.image ? (
+    <img src={project.image} alt={`${project.client} project`} loading="lazy" width="1400" height="1050" />
+  ) : (
+    <span className={`home-project-logo is-${project.theme || "dark"}`}>
+      {project.logo ? <img src={project.logo} alt={`${project.client} logo`} loading="lazy" /> : <b>{project.client}</b>}
+    </span>
+  );
 
 const ProjectDialog = ({ index, onClose }) => {
   const dialogRef = useRef(null);
@@ -111,19 +101,14 @@ const ProjectDialog = ({ index, onClose }) => {
       >
         <XIcon size={24} />
       </button>
-      <img className="home-dialog-image" {...projectImages[index]} />
+      <div className="home-dialog-image home-dialog-visual">
+        <ProjectVisual project={project} />
+      </div>
       <div className="home-dialog-content">
-        <SectionLabel>Sample campaign</SectionLabel>
+        <SectionLabel>Client</SectionLabel>
         <h2 id="project-dialog-title">{project.client}</h2>
         <p>{project.category}</p>
-        <div className="home-dialog-result">
-          <strong>{project.result}</strong>
-          <span>{project.resultLabel}</span>
-        </div>
-        <p className="home-muted">
-          Illustrative project from the existing Skalebee content. Client names
-          and results are sample data; photography is illustrative.
-        </p>
+        {project.note && <p className="home-muted">{project.note}</p>}
         <PillButton to="/#contact" onClick={onClose}>
           Discuss a similar project
         </PillButton>
@@ -156,9 +141,7 @@ export const FeaturedWork = () => {
       <SectionLabel>Selected work</SectionLabel>
       <div className="home-section-heading">
         <div id="work-heading">
-          <SectionTitle>
-            Good things happen when we make a little buzz.
-          </SectionTitle>
+          <SectionTitle>Brands we’ve helped grow.</SectionTitle>
         </div>
         <Link to="/#contact" className="home-text-link">
           Start a project <ArrowUpRightIcon size={21} />
@@ -171,29 +154,26 @@ export const FeaturedWork = () => {
               <button
                 className="home-project-button"
                 onClick={() => setSelected(index)}
-                aria-label={`Explore ${project.client} sample campaign`}
+                aria-label={`About our work with ${project.client}`}
               >
                 <div
                   className="home-project-visual"
                   onPointerEnter={followCursor}
                   onPointerMove={followCursor}
                 >
-                  <img
-                    {...projectImages[index]}
-                    loading="lazy"
-                    width="1400"
-                    height="1050"
-                  />
+                  <ProjectVisual project={project} />
                   <span className="home-project-cursor" aria-hidden="true">
                     See project <ArrowRightIcon size={15} weight="bold" />
                   </span>
                   <span className="home-project-number">
-                    0{index + 1} / SAMPLE CAMPAIGN
+                    0{index + 1} / {project.category}
                   </span>
-                  <span className="home-project-result">
-                    <strong>{project.result}</strong>
-                    <span>{project.resultLabel}</span>
-                  </span>
+                  {project.result && (
+                    <span className="home-project-result">
+                      <strong>{project.result}</strong>
+                      <span>{project.resultLabel}</span>
+                    </span>
+                  )}
                   <span className="home-project-arrow">
                     <ArrowUpRightIcon size={27} />
                   </span>
@@ -207,10 +187,6 @@ export const FeaturedWork = () => {
           ))}
         </div>
       </div>
-      <p className="home-content-note">
-        A preview of what growth can look like. These projects and results are
-        illustrative sample content.
-      </p>
       {selected !== null && (
         <ProjectDialog index={selected} onClose={() => setSelected(null)} />
       )}
@@ -224,9 +200,9 @@ export const AboutSection = () => (
     id="about"
     aria-labelledby="about-heading"
   >
-    <SectionLabel>Small team. Big ambition.</SectionLabel>
+    <SectionLabel>About Skalebee</SectionLabel>
     <div className="home-about-heading" id="about-heading">
-      <SectionTitle>Built to scale what already works.</SectionTitle>
+      <SectionTitle>A Meta-certified team for the UAE and India.</SectionTitle>
       <p>{WHY_US.description}</p>
     </div>
     <div className="home-stats" data-animate="stagger">
@@ -242,41 +218,34 @@ export const AboutSection = () => (
         </div>
       ))}
     </div>
-    <p className="home-content-note">
-      Sample metrics from your existing content — replace with verified results
-      before publishing.
-    </p>
     <div className="home-about-grid">
       <div className="home-portrait" data-home-parallax-frame>
-        {/* Stand-in photo: replace with a team portrait (put it in /public/imgs and update src, alt, width, height) */}
         <img
-          src="/imgs/home/workspace.jpg"
-          alt="The Skalebee team workspace"
-          width="1400"
-          height="2487"
+          src="/imgs/brand/shakkeer.webp"
+          alt="Hand-drawn portrait of Shakkeer, founder of Skalebee"
+          width="760"
+          height="971"
           loading="lazy"
           data-home-parallax
         />
         <div className="home-portrait-caption">
-          <span>Meet your growth partner.</span>
+          <span>Hi, I’m Shakkeer. Meta certified.</span>
           <img src="/svgs/icon.svg" alt="" width="32" height="32" />
         </div>
       </div>
       <div className="home-about-copy" data-animate="fade-up">
-        <SectionLabel>People behind the performance</SectionLabel>
-        <h3>
-          Your ambition.
-          <br />
-          Our everyday obsession.
-        </h3>
+        <SectionLabel>{WHY_US.eyebrow}</SectionLabel>
+        <h3>{WHY_US.title}</h3>
         <p>
-          We bring strategy, creative and performance together, so your brand
-          can grow with a clear direction.
+          Skalebee helps businesses get more customers online, and actually
+          close them. We are a brand of Sharaco Technologies Pvt Ltd, based in
+          Pattambi, Kerala, and working with businesses in Dubai, across the UAE
+          and throughout India.
         </p>
         <p>
-          From the first brief to the next big campaign, we stay close to the
-          work and closer to your goals. You get a team that asks better
-          questions, tests new ideas and shares what’s working.
+          Sales over vanity: likes and clicks are nice, but leads, bookings and
+          revenue are what we report on. You own your ad accounts and data, and
+          our fee and your ad budget are always shown separately.
         </p>
         <ul>
           {WHY_US.points.map((point) => (
@@ -286,13 +255,13 @@ export const AboutSection = () => (
             </li>
           ))}
         </ul>
-        <PillButton to="/#contact">Meet your next growth team</PillButton>
+        <PillButton to="/#contact">Get a free growth audit</PillButton>
       </div>
     </div>
     <div className="home-platforms">
       <SectionLabel>Where we make it happen</SectionLabel>
       <div>
-        {["Meta", "Google", "YouTube", "Instagram", "LinkedIn"].map((name) => (
+        {["Google", "Meta", "Instagram", "Facebook", "WhatsApp"].map((name) => (
           <span key={name}>{name}</span>
         ))}
       </div>
@@ -307,13 +276,13 @@ export const ProcessSection = () => (
     aria-labelledby="process-heading"
   >
     <div className="home-process-intro">
-      <SectionLabel>The way we work</SectionLabel>
+      <SectionLabel>How it works</SectionLabel>
       <div id="process-heading">
-        <SectionTitle>Less guesswork. More forward.</SectionTitle>
+        <SectionTitle>Your growth journey in 8 simple steps.</SectionTitle>
       </div>
       <p>
-        A clear process. An open conversation. And a little more momentum every
-        week.
+        Every Skalebee plan follows the same path: get seen, get chosen, reply
+        fast, close the sale and keep improving.
       </p>
       <span className="home-process-scroll">
         Keep moving <ArrowRightIcon size={18} />
@@ -336,6 +305,8 @@ export const ProcessSection = () => (
 
 export const TestimonialsSection = () => {
   const [current, setCurrent] = useState(0);
+  // Only real testimonials: the section stays hidden until TESTIMONIALS has entries
+  if (!TESTIMONIALS.length) return null;
   const quote = TESTIMONIALS[current];
   return (
     <section
@@ -347,7 +318,6 @@ export const TestimonialsSection = () => {
         <div id="testimonials-heading">
           <SectionTitle>Better together. In their words.</SectionTitle>
         </div>
-        <span className="home-label">Sample testimonials</span>
       </div>
       <div className="home-testimonial-layout">
         <div className="home-testimonial-brand" aria-hidden="true">
@@ -413,7 +383,7 @@ export const FaqSection = () => (
     <div>
       <SectionLabel>A little clarity</SectionLabel>
       <div id="faq-heading">
-        <SectionTitle>Good questions. Straight answers.</SectionTitle>
+        <SectionTitle>Questions brands ask us.</SectionTitle>
       </div>
       <p className="home-faq-intro">
         Still have something on your mind?

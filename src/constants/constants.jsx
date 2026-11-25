@@ -8,20 +8,21 @@ export const ROUTES = {
   FAQ: "/faq",
 };
 
-// Placeholder contact details - replace with your real ones
+// From skalebee.com
 export const CONTACT_INFO = {
-  email: "hello@yourdomain.com",
-  phone: "+91 00000 00000",
-  address: "Your office address, City",
+  email: "hello@skalebee.com",
+  phone: "+91 90378 37100",
+  whatsapp: "+91 98466 56915",
+  whatsappUrl: "https://wa.me/919846656915",
+  company: "Sharaco Technologies Pvt Ltd",
+  address: "Sharaco Technologies Pvt Ltd, Mele Pattambi, Pattambi, Palakkad, Kerala 679303",
+  offices: ["Pattambi, Kerala, India", "Dubai, United Arab Emirates"],
 };
 
-// Replace "#" with your real profile URLs
+// Shown in the footer. skalebee.com lists WhatsApp only; add more as { name, href } with full URLs
+// (e.g. { name: "Instagram", href: "https://instagram.com/..." }). Entries with "#" show as plain text.
 export const SOCIAL_LINKS = [
-  { name: "Instagram", icon: "Instagram", href: "#" },
-  { name: "LinkedIn", icon: "Linkedin", href: "#" },
-  { name: "YouTube", icon: "Youtube", href: "#" },
-  { name: "X", icon: "X", href: "#" },
-  { name: "WhatsApp", icon: "Whatsapp", href: "#" },
+  { name: "WhatsApp", icon: "Whatsapp", href: "https://wa.me/919846656915" },
 ];
 
 export const FOOTER_LINKS = [

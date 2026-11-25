@@ -1,283 +1,195 @@
 // All home page copy lives here so it can be edited without touching the layout.
-// Replace the placeholder text, names and numbers with your real content.
+// Content follows skalebee.com (services, journey, founder, clients, FAQs, contact details).
+// Keep claims factual: only add numbers, results or testimonials you can back up.
 
 export const HERO = {
   // Round image above the name. Leave empty to show the Skalebee mark.
-  avatar: "",
+  avatar: "/imgs/brand/shakkeer.webp",
   name: "Skalebee",
-  status: "Taking on new brands",
+  status: "Free growth audit",
   // Two headline lines (the SEO build also reads this). "{...}" tokens are ignored.
   titleLines: [
-    ["Scale", "ads", "that"],
-    ["make", "buzz"],
+    ["Digital", "marketing", "agency"],
+    ["in", "Dubai", "&", "India"],
   ],
   description:
-    "All the things you need in digital marketing, from the first lead to the final sale. Not just ads, it's about your sales.",
-  primaryCta: "Book a call",
-  secondaryCta: "Get Free Proposal",
-  since: "Growing brands since 2024",
+    "We bring you customers from Google, Instagram, Facebook and WhatsApp, and help you close them. SEO, ads, social media, websites, online stores and WhatsApp automation, all under one roof.",
+  primaryCta: "Get a free growth audit",
+  secondaryCta: "Chat on WhatsApp",
+  since: "Digital marketing · Dubai, UAE & India",
 };
 
 // Hero side walls: "work" tiles on two walls that run into the screen.
 // Tiles are spread over the columns automatically; add as many as you like.
 // Simplest: { kind: "photo", image: "/imgs/...jpg" }  or  { kind: "video", video: "/videos/...mp4", poster: "..." }
 // Mockups (built from your photos): ad, insta, phone, site, dashboard, chat, search, stat
-const P = {
-  fashion: "/imgs/home/fashion.jpg",
-  coffee: "/imgs/home/coffee.jpg",
-  skincare: "/imgs/home/skincare.jpg",
-  workspace: "/imgs/home/workspace.jpg",
-};
 export const HERO_WALL = [
   // Work samples (files in /public/imgs/hero). Add more as { kind: "photo", image: "/imgs/hero/....jpg" }
   { kind: "photo", image: "/imgs/hero/work-1.jpg" },
   { kind: "photo", image: "/imgs/hero/work-2.jpg" },
-  { kind: "stat", stat: "+312%", label: "Online revenue in 6 months", tag: "Meta Ads", theme: "yellow" },
+  { kind: "stat", stat: "24/7", label: "Instant WhatsApp replies", tag: "Automation", theme: "yellow" },
   { kind: "photo", image: "/imgs/hero/work-3.jpg" },
   { kind: "photo", image: "/imgs/hero/work-4.jpg" },
   { kind: "photo", image: "/imgs/hero/work-5.jpg" },
-  { kind: "dashboard", title: "Meta Ads · Purchases", value: "5.2x", label: "ROAS", change: "+38%", theme: "dark" },
+  { kind: "stat", stat: "UAE + India", label: "Two markets, one team", tag: "Skalebee", theme: "dark" },
   { kind: "photo", image: "/imgs/hero/work-6.jpg" },
   { kind: "photo", image: "/imgs/hero/work-7.jpg" },
   { kind: "photo", image: "/imgs/hero/work-8.jpg" },
-  { kind: "stat", stat: "18M", label: "Organic views from 40 creators", tag: "Creators", theme: "blue" },
+  { kind: "stat", stat: "Meta", label: "Certified founder-led team", tag: "Certified", theme: "blue" },
   { kind: "photo", image: "/imgs/hero/work-9.jpg" },
   { kind: "photo", image: "/imgs/hero/work-10.jpg" },
   { kind: "photo", image: "/imgs/hero/work-11.jpg" },
-  { kind: "stat", stat: "250+", label: "Brands growing with us", tag: "Skalebee", theme: "dark" },
+  { kind: "stat", stat: "8 steps", label: "From getting seen to the final sale", tag: "Growth journey", theme: "dark" },
 ];
 
 export const MARQUEE_WORDS = ["Scale", "Grow", "Convert", "Buzz", "Launch", "Win"];
 
-// What's included in the Brand Launch Kit
-export const BRAND_KIT_ITEMS = [
-  "Brand naming",
-  "Website",
-  "Business email",
-  "Instagram profile",
-  "Facebook profile",
-  "Google Business Profile",
-];
-
+// Services (skalebee.com/services). `artwork` = animation in /public/imgs/home/services/
 export const SERVICES = [
   {
-    title: "Websites",
-    artwork: "websites",
-    description:
-      "Fast, mobile-friendly websites and landing pages designed to turn visitors into enquiries and sales.",
-    points: ["Design & development", "Landing pages that convert", "Speed & mobile optimisation"],
-  },
-  {
-    title: "SEO",
+    title: "SEO services",
     artwork: "search",
     description:
-      "Get found when customers search. We fix the technical basics, target the right keywords and build content that ranks.",
-    points: ["Technical SEO audit", "Keyword & content strategy", "Local SEO & Google Business Profile"],
+      "When people search for what you sell, you should be the business they find. We fix your website, grow your Google Business Profile and write content that ranks, so enquiries come in every day without paying for every click.",
+    points: ["SEO audit", "Keyword plan", "On-page SEO", "Technical SEO"],
   },
   {
-    title: "Digital Marketing",
-    artwork: "strategy",
-    description:
-      "One plan across all your channels, with clear goals, consistent messaging and reporting you can follow.",
-    points: ["Marketing strategy", "Social media management", "Content & creatives"],
-  },
-  {
-    title: "Google Ads",
+    title: "Google & Meta Ads",
     artwork: "google-ads",
     description:
-      "Search, Shopping, Performance Max and YouTube campaigns built around clear targets and optimised every week.",
-    points: ["Search & Shopping campaigns", "Conversion tracking", "Weekly optimisation"],
+      "We plan, create and manage your ads on Google, Facebook and Instagram. Every campaign is tracked to real leads, WhatsApp chats and sales, so you know exactly what your money brings back.",
+    points: ["Ad account audit", "Google Ads", "Meta Ads", "Ad creatives"],
   },
   {
-    title: "Meta Ads",
+    title: "Social media marketing",
     artwork: "campaigns",
     description:
-      "Facebook and Instagram ads that stop the scroll, run by a Meta certified team and scaled only when the numbers say so.",
-    points: ["Campaign setup & audits", "Creative testing", "Retargeting"],
+      "We plan, design and post your Instagram and Facebook content, reply to your community and turn followers into enquiries. Your page looks active, professional and on-brand every week.",
+    points: ["Monthly content plan", "Design & reels", "Captions & hashtags", "Posting & scheduling"],
   },
   {
-    title: "Performance Marketing",
+    title: "Growth marketing",
     artwork: "performance",
     description:
-      "Every rupee tracked from click to sale. We move budget to whatever brings the most leads and revenue.",
-    points: ["Full-funnel tracking", "ROAS & cost-per-lead targets", "Budget optimisation"],
+      "Most people don't buy the first time they see you. We build the full funnel around your ads and website: landing pages, retargeting, follow-ups and testing, so more of the people you already reach become customers.",
+    points: ["Funnel mapping", "Landing pages", "Retargeting", "Lead nurturing"],
   },
   {
-    title: "E-commerce Store",
+    title: "Website design",
+    artwork: "websites",
+    description:
+      "Your website is your best salesperson. We design and build fast, mobile-first websites that explain what you do in seconds, rank on Google and make it easy to call, WhatsApp or book.",
+    points: ["Strategy & sitemap", "Custom design", "Copywriting", "SEO setup"],
+  },
+  {
+    title: "E-commerce stores",
     artwork: "store",
     description:
-      "Online stores on Shopify or WooCommerce, built to sell: clear product pages, smooth checkout and the marketing to bring buyers back.",
-    points: ["Shopify & WooCommerce", "Product pages that convert", "Payments & shipping setup"],
+      "We build online stores that load fast, look great on phones and make checkout simple. Payments, shipping, product feeds, catalogue ads and WhatsApp order updates are all set up, so you can start selling from day one.",
+    points: ["Store setup", "Payments & shipping", "Product pages", "Catalogue & feeds"],
   },
   {
-    title: "WhatsApp Automation",
+    title: "WhatsApp automation",
     artwork: "conversations",
     description:
-      "Reply instantly, follow up automatically and send updates on WhatsApp, so no lead or order slips through.",
-    points: ["WhatsApp Business API setup", "Chatbots & auto-replies", "Lead & order notifications"],
-  },
-  {
-    title: "Lead to Sales Team",
-    artwork: "briefing",
-    description:
-      "Leads are only the start. Our team follows up, qualifies and helps turn enquiries into paying customers.",
-    points: ["Lead follow-up & qualification", "Sales scripts & process", "CRM setup"],
-  },
-  {
-    title: "Brand Launch Kit",
-    artwork: "launch",
-    description:
-      "Everything a new brand needs to go live, set up properly from day one.",
-    points: BRAND_KIT_ITEMS,
+      "Your customers already message on WhatsApp. We set up the official WhatsApp Business Platform with chatbots and automations that reply instantly, collect details, send updates and pass hot leads to your team, even at 2 a.m.",
+    points: ["WhatsApp Business API", "Chatbot flows", "Click-to-WhatsApp ads", "Broadcasts"],
   },
 ];
 
 // Services section heading: "{count} services" + the muted rest
 export const SERVICES_SECTION = {
-  muted: "from the first lead to the final sale",
+  muted: "from getting found on Google to closing the sale on WhatsApp",
 };
 
 export const WHY_US = {
   eyebrow: "Why Skalebee",
-  title: "Built To Scale What Already Works",
-  highlight: ["Scale"],
+  title: "Why brands choose Skalebee",
+  highlight: ["Skalebee"],
   description:
-    "We work like part of your team: open numbers, fast tests and decisions you can follow.",
+    "Skalebee is led by founder Shakkeer, a Meta Certified Digital Marketing Associate and Meta Certified Business Messaging Strategist. We keep the team lean, the reporting honest and the focus on sales, not vanity numbers.",
   points: [
-    "Meta Business Partner with a Meta certified team",
-    "Weekly review of every campaign",
-    "Monthly report meeting with you",
-    "We focus on sales, not just clicks",
+    "Founder-led: you talk to the person planning your campaigns",
+    "Full funnel, one team: SEO, ads, social, website, store and WhatsApp",
+    "UAE + India focus: we know the buyers, languages and ad costs in both",
+    "Clear reporting: monthly reports on leads, sales and cost per result",
   ],
 };
 
+// About section counters: facts only (no invented results)
 export const STATS = [
-  { value: 250, suffix: "+", label: "Brands grown" },
-  { value: 1.2, decimals: 1, suffix: "B", label: "Impressions served" },
-  { value: 4.6, decimals: 1, suffix: "x", label: "Average ROAS" },
-  { value: 98, suffix: "%", label: "Client retention" },
+  { value: 7, label: "Services under one roof" },
+  { value: 2, label: "Meta certifications" },
+  { value: 2, label: "Markets: UAE & India" },
+  { value: 1, label: "Working day to hear back" },
 ];
 
+// Featured work: brands from skalebee.com/portfolio. Add `image` (a screenshot) or results only
+// when you have them. `logo` sits on a coloured card; `theme`: "dark" | "light" | "yellow".
 export const CASE_STUDIES = [
   {
-    client: "Northwind Apparel",
-    category: "Fashion · Meta Ads",
-    result: "+312%",
-    resultLabel: "online revenue in 6 months",
-    gradient: "from-[#FFD400] to-[#F6B90F]",
-    dark: false,
+    client: "GBH",
+    category: "Digital marketing",
+    logo: "/imgs/brand/client-gbh-white.png",
+    theme: "dark",
+    note: "Live link coming soon",
   },
   {
-    client: "Brewhaus Coffee",
-    category: "F&B · Creator Campaign",
-    result: "18M",
-    resultLabel: "organic views from 40 creators",
-    gradient: "from-[#2A2A2A] to-[#0A0A0A]",
-    dark: true,
+    client: "Flowbee.io",
+    category: "Digital marketing",
+    logo: "/imgs/brand/client-flowbee.png",
+    theme: "light",
+    note: "Live link coming soon",
   },
   {
-    client: "Lumen Skincare",
-    category: "Beauty · Google + YouTube",
-    result: "5.2x",
-    resultLabel: "return on ad spend",
-    gradient: "from-[#FFF3B0] to-[#FFD400]",
-    dark: false,
-  },
-  {
-    client: "Stackly CRM",
-    category: "SaaS · Lead Generation",
-    result: "-47%",
-    resultLabel: "cost per qualified lead",
-    gradient: "from-[#1C1C1C] to-[#3A3000]",
-    dark: true,
+    client: "GBC",
+    category: "Digital marketing",
+    theme: "yellow",
+    note: "Live link coming soon",
   },
 ];
 
+// "Your growth journey in 8 simple steps" (skalebee.com)
 export const APPROACH = [
-  {
-    icon: "MagnifyingGlass",
-    title: "Discover",
-    description: "We audit your accounts, audience and margins to find the fastest wins.",
-  },
-  {
-    icon: "Strategy",
-    title: "Plan",
-    description: "A channel and creative plan with clear targets for every rupee.",
-  },
-  {
-    icon: "RocketLaunch",
-    title: "Launch",
-    description: "Campaigns go live with tracking checked and creatives ready to test.",
-  },
-  {
-    icon: "TrendUp",
-    title: "Scale",
-    description: "We double down on what converts and cut what doesn't, every week.",
-  },
+  { title: "Meta Ads", description: "Facebook and Instagram ads put your brand in front of the right people." },
+  { title: "Google Ads", description: "Search ads catch people who are ready to buy right now." },
+  { title: "Retargeting", description: "Visitors who didn't buy see you again until they come back." },
+  { title: "SEO", description: "Your website ranks on Google, bringing free leads every month." },
+  { title: "WhatsApp Automation", description: "Every enquiry gets an instant reply on WhatsApp, 24/7." },
+  { title: "Experts", description: "A Meta-certified team manages it all and keeps improving it." },
+  { title: "Closing Guides", description: "Simple scripts and follow-ups help your team close the sale." },
+  { title: "Business Audit", description: "Regular audits show what's working and what to fix next." },
 ];
 
-export const TESTIMONIALS = [
-  {
-    quote:
-      "Skalebee rebuilt our ad account from scratch. Within three months our cost per purchase dropped by almost half.",
-    name: "Ananya K.",
-    role: "Founder, Northwind Apparel",
-  },
-  {
-    quote:
-      "The creator campaign they ran for our launch did more for us than a year of paid ads. Organised, quick and honest.",
-    name: "Rahul S.",
-    role: "Marketing Lead, Brewhaus",
-  },
-  {
-    quote:
-      "Weekly reports we actually understand, and a team that answers on the same day. Exactly what we needed.",
-    name: "Meera J.",
-    role: "CEO, Lumen Skincare",
-  },
-  {
-    quote:
-      "They told us which channels not to spend on. That alone saved us more than their fee.",
-    name: "Pranav N.",
-    role: "Growth, Stackly",
-  },
-];
+// Add real client testimonials here ({ quote, name, role }). The section stays hidden while empty.
+export const TESTIMONIALS = [];
 
+// FAQs (skalebee.com)
 export const FAQS = [
   {
-    question: "Do you offer a free business review?",
+    question: "What does Skalebee do?",
     answer:
-      "Yes. We review your business, website and ads for free and share clear next steps, with no obligation.",
+      "Skalebee is a digital marketing agency for Dubai, the UAE and India. We bring you customers from Google, Facebook, Instagram and WhatsApp through SEO, Google and Meta ads, social media, websites, online stores and WhatsApp automation.",
   },
   {
-    question: "What budget do I need to start?",
+    question: "How much does digital marketing cost in Dubai or India?",
     answer:
-      "Most clients start between ₹50,000 and ₹2,00,000 per month in ad spend. We'll recommend a budget during your free proposal call.",
+      "It depends on the services, markets and how fast you want to grow. After a free audit we send a fixed monthly quote, with our fee and your ad budget shown separately.",
   },
   {
-    question: "How soon will I see results?",
+    question: "How long until I see results?",
     answer:
-      "You'll usually see early signals in the first 2–3 weeks. Stable, scalable results typically take 60–90 days of testing.",
+      "Ads can bring leads within the first weeks. SEO usually shows steady results in 4–6 months. We plan both so you get quick wins and long-term growth.",
   },
   {
-    question: "Do you work with small businesses?",
+    question: "Do you work with businesses outside Dubai and Kerala?",
     answer:
-      "Yes. We work with early-stage brands as well as established companies, and shape the plan around your stage and budget.",
+      "Yes. We work with brands across the UAE and India, and everything from audits to monthly reports can be handled online.",
   },
   {
-    question: "Which platforms do you manage?",
+    question: "How do we get started?",
     answer:
-      "Meta (Facebook & Instagram), Google Search, Shopping & YouTube, SEO, websites, Shopify & WooCommerce stores and WhatsApp automation.",
-  },
-  {
-    question: "Is there a long-term contract?",
-    answer:
-      "No. We work month to month after an initial 3-month setup period, so we keep earning your business.",
-  },
-  {
-    question: "How do you report results?",
-    answer:
-      "We review your campaigns every week, and meet with you every month to walk through the report: leads, sales, spend and the plan for next month.",
+      "Fill in the form or message us on WhatsApp. We'll book a short call, review your current marketing and send your free growth audit.",
   },
 ];
 
@@ -285,10 +197,10 @@ export const FAQS = [
 // `icon` = a Phosphor logo name, or use `text` (short label) / `image` (path in /public) for anything else.
 export const PLATFORMS_SECTION = {
   label: "Platforms we work with",
-  title: "Every platform your brand needs - in one place",
+  title: "Every platform your brand needs, in one place",
   description:
-    "Ads, social, search, stores and WhatsApp, managed by one team, so you never have to juggle agencies or logins again.",
-  cta: "Book a call",
+    "Google, Meta, Instagram and WhatsApp, plus your website and online store, run by one team so they work together.",
+  cta: "Get a free growth audit",
 };
 
 export const PLATFORMS = [
@@ -296,58 +208,54 @@ export const PLATFORMS = [
   { name: "Facebook", icon: "FacebookLogo", color: "#1877F2" },
   { name: "Instagram", icon: "InstagramLogo", color: "#E1306C" },
   { name: "WhatsApp", icon: "WhatsappLogo", color: "#25D366" },
-  { name: "Flowbee", text: "F", color: "#F6B90F" }, // add `image: "/imgs/flowbee.png"` to use the real logo
   { name: "Google", icon: "GoogleLogo", color: "#4285F4" },
   { name: "YouTube", icon: "YoutubeLogo", color: "#FF0000" },
-  { name: "LinkedIn", icon: "LinkedinLogo", color: "#0A66C2" },
   { name: "WooCommerce", text: "Woo", color: "#7F54B3" },
   { name: "Shopify", text: "Shop", color: "#5E8E3E" },
-  { name: "Threads", icon: "ThreadsLogo", color: "#000000" },
-  { name: "TikTok", icon: "TiktokLogo", color: "#000000" },
 ];
 
-export const SERVICE_OPTIONS =[...SERVICES.map((service) => service.title), "Not sure yet"];
+export const SERVICE_OPTIONS = [...SERVICES.map((service) => service.title), "Not sure yet"];
 
 // ---------- "Lead → Sales" section ----------
 export const LEAD_TO_SALES = {
   label: "Lead → Sales",
   title: "Not just ads. It's about your sales.",
   description:
-    "All the things you need in digital marketing, working together, from the first click to the final sale.",
+    "Get seen, get chosen, reply fast, close the sale and keep improving, with every channel working together.",
   steps: [
     { title: "Get found", image: "/imgs/home/fashion.jpg", text: "SEO, Google Ads and Meta Ads bring the right people to you.", tags: ["SEO", "Google Ads", "Meta Ads"] },
     { title: "Capture leads", image: "/imgs/home/workspace.jpg", text: "Websites and landing pages built to turn visitors into enquiries.", tags: ["Websites", "Landing pages"] },
-    { title: "Follow up fast", image: "/imgs/home/coffee.jpg", text: "WhatsApp automation replies instantly and keeps every lead warm.", tags: ["WhatsApp Automation"] },
-    { title: "Close the sale", image: "/imgs/home/skincare.jpg", text: "Our lead-to-sales team qualifies leads and helps turn them into customers.", tags: ["Sales team", "CRM"] },
+    { title: "Follow up fast", image: "/imgs/home/coffee.jpg", text: "WhatsApp automation replies instantly, 24/7, and keeps every lead warm.", tags: ["WhatsApp Automation"] },
+    { title: "Close the sale", image: "/imgs/home/skincare.jpg", text: "Simple scripts and follow-ups help your team close the sale.", tags: ["Closing guides", "Follow-ups"] },
   ],
 };
 
 // ---------- "How we keep you in the loop" section ----------
 export const REVIEWS = {
   label: "Always in the loop",
-  title: "We review. You stay in control.",
+  title: "We report. You stay in control.",
   items: [
     {
-      title: "Weekly Review",
-      text: "Every week we review your campaigns, leads and spend, and adjust what isn't working.",
-      tag: "Every week",
-    },
-    {
-      title: "Monthly Report Meeting",
-      text: "A monthly meeting with you to walk through the report: results, sales and the plan for next month.",
+      title: "Clear Monthly Reports",
+      text: "Monthly reports on leads, sales and cost per result, in plain language. You own your ad accounts and data.",
       tag: "Every month",
     },
     {
-      title: "Free Business Review",
-      text: "Not working with us yet? Get a free review of your business, website and ads, with clear next steps.",
+      title: "Regular Audits",
+      text: "Regular audits and tests show what's working and what to fix next, so results keep getting better.",
+      tag: "Always improving",
+    },
+    {
+      title: "Free Growth Audit",
+      text: "What's working, what's leaking money and the first three things to fix, with a clear 90-day plan.",
       tag: "Free",
-      cta: "Book your free review",
+      cta: "Get my free audit",
     },
   ],
 };
 
-// ---------- Pricing (3 plans) ----------
-// PLACEHOLDER PRICES: replace "₹XX,XXX" with your real prices.
+// ---------- Pricing (3 plans) - currently not shown on the page ----------
+// PLACEHOLDER PRICES: replace "₹XX,XXX" with your real prices before turning the section on.
 export const PRICING = {
   label: "Pricing",
   title: "Simple plans. Clear results.",
@@ -358,12 +266,7 @@ export const PRICING = {
       price: "₹XX,XXX",
       period: "/month",
       description: "For new brands getting online the right way.",
-      features: [
-        "Brand Launch Kit: naming, website, business email, Instagram, Facebook & Google profiles",
-        "Basic SEO setup",
-        "Free business review",
-        "Monthly report meeting",
-      ],
+      features: ["Website design", "SEO setup", "Free growth audit", "Monthly report"],
       cta: "Start with Starter",
     },
     {
@@ -371,14 +274,7 @@ export const PRICING = {
       price: "₹XX,XXX",
       period: "/month",
       description: "For businesses ready to generate leads every day.",
-      features: [
-        "Everything in Starter",
-        "Meta Ads or Google Ads management",
-        "Landing page",
-        "WhatsApp automation",
-        "Weekly review",
-        "Monthly report meeting",
-      ],
+      features: ["Everything in Starter", "Google or Meta Ads", "Landing page", "WhatsApp automation", "Monthly report"],
       cta: "Choose Growth",
       popular: true,
     },
@@ -386,68 +282,72 @@ export const PRICING = {
       name: "Scale",
       price: "₹XX,XXX",
       period: "/month",
-      description: "Full lead-to-sales system for brands that want to scale.",
-      features: [
-        "Everything in Growth",
-        "Meta Ads + Google Ads",
-        "Performance marketing & SEO",
-        "E-commerce store (Shopify / WooCommerce)",
-        "Lead to sales team",
-        "Weekly review + monthly report meeting",
-      ],
+      description: "The full growth journey for brands that want to scale.",
+      features: ["Everything in Growth", "Google + Meta Ads", "Growth marketing & SEO", "E-commerce store", "Closing guides", "Regular audits"],
       cta: "Choose Scale",
     },
   ],
 };
 
-// ---------- Certifications ----------
-// Put the certificate images in /public/imgs/certs/ with these file names.
+// ---------- Certifications (bento) - currently not shown on the page ----------
 export const CERTIFICATIONS = {
-  label: "Certified & trusted",
-  title: "A Meta Business Partner, certified by Meta.",
+  label: "Meta certified",
+  title: "A Meta-certified team for the UAE and India.",
   // Bento grid: the 5 text cards fill the gaps around the 2 photos.
   items: [
-    { title: "Meta Business Partner", subtitle: "Official partner" },
     { title: "Meta Certified Digital Marketing Associate", subtitle: "Meta certification" },
-    { title: "Meta Certified Media Buying Strategist", subtitle: "Meta certification" },
-    { title: "Weekly reviews, monthly reports", subtitle: "Always in the loop" },
-    { title: "Ads, websites & WhatsApp in one team", subtitle: "One partner" },
+    { title: "Meta Certified Business Messaging Strategy", subtitle: "Meta certification" },
+    { title: "Founder-led", subtitle: "You talk to the person planning your campaigns" },
+    { title: "Clear monthly reports", subtitle: "Always in the loop" },
+    { title: "Ads, websites & WhatsApp in one team", subtitle: "Full funnel" },
   ],
   photos: {
-    tall: { src: "/imgs/home/fashion.jpg", alt: "Clothing rack with hoodies and a cap" },
-    square: { src: "/imgs/home/skincare.jpg", alt: "Serum bottles and a facial cleanser" },
+    tall: { src: "/imgs/brand/dubai.webp", alt: "Hand-drawn Dubai skyline with Google, Meta, Instagram and WhatsApp icons" },
+    square: { src: "/imgs/brand/kerala.webp", alt: "Hand-drawn Kerala houseboat with Google, Meta, Instagram and WhatsApp icons" },
   },
 };
 
 // ---------- Meta Specialist (dark bento section) ----------
-// PLACEHOLDER: check the name, numbers, location and bio before publishing.
+const CREDLY = {
+  associate: "https://www.credly.com/badges/8779929f-347f-4ed4-9b53-2b18440b0d8b/public_url",
+  messaging: "https://www.credly.com/badges/e7b10e2d-c717-48e1-8d1e-8c01c9c01d06/public_url",
+};
 export const META_SPECIALIST = {
-  label: "Meta Specialist",
+  label: "Meta certified",
   stats: [
-    { value: 5, suffix: "+", label: "Years running Meta Ads" },
-    { value: 3, suffix: "", label: "Meta certifications" },
-    { value: 250, suffix: "+", label: "Brands scaled on Meta" },
+    { value: 2, suffix: "", label: "Meta certifications" },
+    { value: 2, suffix: "", label: "Offices: Kerala & Dubai" },
+    { value: 7, suffix: "", label: "Services under one roof" },
   ],
   location: {
-    title: "Based in India",
-    subtitle: "Available worldwide",
+    title: "Kerala & Dubai",
+    subtitle: "Serving the UAE & India",
     // Globe: pin = [longitude, latitude] of the office, center = where the globe camera looks
-    pin: [76.27, 9.93], // Kerala (Kochi) - change to your city
+    pin: [76.19, 10.81], // Pattambi, Kerala
     center: [96, -24],
   },
   person: {
-    name: "Shakkeer PP",
-    role: "Meta Certified Specialist · Skalebee",
-    image: "https://i.pinimg.com/1200x/a0/e9/ba/a0e9ba907ad99de21518647b5167db07.jpg",
-    heading: "The Meta Specialist",
+    name: "Shakkeer",
+    role: "Founder · Meta Certified",
+    image: "/imgs/brand/shakkeer.webp",
+    heading: "Meet our founder, Shakkeer",
     bio: [
-      "Every Skalebee campaign on Facebook and Instagram is planned and run by a Meta certified specialist, not handed off to a junior or an automated tool.",
-      "The work covers the full Meta stack: account structure, Pixel and Conversions API tracking, audiences, creative testing and retargeting. Budgets are scaled only when the numbers say so.",
-      "From a first test campaign to multi-lakh monthly spend, you get one expert who knows your account inside out and reviews it every week.",
+      "Skalebee is led by founder Shakkeer, a Meta Certified Digital Marketing Associate and Meta Certified Business Messaging Strategist.",
+      "You talk to the person planning your campaigns, not an account manager in the middle. We keep the team lean, the reporting honest and the focus on sales, not vanity numbers.",
+      "Skalebee is a brand of Sharaco Technologies Pvt Ltd, based in Pattambi, Kerala, and working with businesses in Dubai, across the UAE and throughout India.",
     ],
-    cta: "Work with our Meta specialist",
+    cta: "Work with Shakkeer",
   },
-  partner: { title: "Meta Business Partner", cta: "Learn more" },
+  partner: {
+    title: "Meta Certified",
+    subtitle: "Digital Marketing Associate · Business Messaging Strategy",
+    cta: "Verify on Credly",
+    href: CREDLY.associate,
+    badges: [
+      { src: "/imgs/brand/meta-digital-marketing-associate.png", alt: "Meta Certified Digital Marketing Associate badge", href: CREDLY.associate },
+      { src: "/imgs/brand/meta-business-messaging-strategy.png", alt: "Meta Certified Skill: Business Messaging Strategy badge", href: CREDLY.messaging },
+    ],
+  },
   toolbox: {
     title: "Everyday's Toolbox",
     subtitle: "Mastered for every campaign.",
