@@ -1,0 +1,61 @@
+@reference "tailwindcss";
+@reference "../../style.css";
+
+
+
+@layer components {
+  /* Style Variants */
+
+  .tui-btn {
+    @apply outline-0 flex items-center justify-center gap-2 rounded-lg border border-transparent text-sm font-medium leading-0 transition-colors duration-300 cursor-pointer disabled:cursor-not-allowed;
+  }
+
+  .tui-btn-primary {
+    @apply text-white bg-brand-500 hover:opacity-90 focus:ring-[3px] focus:ring-brand-300 focus:border-brand-800 disabled:bg-gray-200 disabled:text-gray-400 border border-brand-800;
+  }
+
+  .tui-btn-secondary {
+    @apply text-gray-500 bg-white border-2 border-gray-200 hover:bg-gray-50 focus:ring-[3px] focus:ring-gray-100 focus:border-gray-400 shadow-gray-100 disabled:bg-gray-200 disabled:text-gray-400;
+  }
+
+  .tui-btn-secondary-2 {
+    @apply text-gray-500 bg-[#EEEEED] border-2 border-transparent hover:bg-gray-50 focus:ring-[3px] focus:ring-gray-100 focus:border-gray-400 shadow-gray-100 disabled:bg-gray-200 disabled:text-gray-400;
+  }
+
+  .tui-btn-tertiary {
+    @apply bg-transparent text-gray-500 focus:ring-[3px] focus:ring-gray-100 focus:border-gray-400 hover:bg-gray-100;
+  }
+
+  .tui-btn-success {
+    @apply text-white bg-green-500 hover:opacity-90 focus:ring-[3px] focus:ring-green-200 focus:border-green-600 disabled:bg-gray-200 disabled:text-gray-400;
+  }
+
+  .tui-btn-danger {
+    @apply text-white bg-red-500 hover:opacity-90 focus:ring-[3px] focus:ring-red-200 focus:border-red-600 disabled:bg-gray-200 disabled:text-gray-400;
+  }
+
+  /* Size Variants */
+  .tui-btn-xs {
+    @apply h-[24px] px-4 py-2.5 text-xs;
+  }
+
+  .tui-btn-sm {
+    @apply h-[32px] px-2.5 py-[2.5px] text-xs;
+  }
+
+  .tui-btn-base {
+    @apply h-[36px] px-2.5 py-[2.5px] text-sm;
+  }
+
+  .tui-btn-md {
+    @apply h-[40px] px-4 py-2.5 text-sm;
+  }
+
+  .tui-btn-lg {
+    @apply h-[52px] px-5 py-[14px] text-sm;
+  }
+
+  .tui-btn-xl {
+    @apply h-[56px] p-4 text-sm;
+  }
+}

@@ -1,0 +1,16 @@
+@reference "tailwindcss";
+@reference "../../style.css";
+
+@layer components {
+  .tui-popover-trigger {
+    @apply flex h-8 items-center justify-center whitespace-nowrap border border-neutral-950 bg-white px-3 text-sm font-normal text-neutral-950 select-none hover:not-data-disabled:bg-neutral-100 active:not-data-disabled:bg-neutral-200 data-disabled:border-neutral-500 data-disabled:text-neutral-500 disabled:border-neutral-500 disabled:text-neutral-500 data-pressed:bg-neutral-100 focus-visible:outline-2 focus-visible:-outline-offset-1 focus-visible:outline-neutral-950;
+  }
+
+  .tui-popover-positioner {
+    @apply z-50 outline-hidden;
+  }
+
+  .tui-popover-popup {
+    @apply relative z-50 flex h-(--popup-height,auto) w-(--popup-width,auto) max-w-[500px] origin-(--transform-origin) flex-col gap-1 border border-neutral-950 bg-white p-3 text-neutral-950 shadow-[0.25rem_0.25rem_0] shadow-black/12 outline-none transition-[scale,opacity] duration-100 ease-out data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-starting-style:scale-[0.98] data-starting-style:opacity-0;
+  }
+}

@@ -1,0 +1,12 @@
+@reference "tailwindcss";
+@reference "../../style.css";
+
+@layer components {
+  .tui-otp-input {
+    @apply flex w-full gap-2;
+  }
+
+  .tui-otp-input-box {
+    @apply size-10 text-center;
+  }
+}

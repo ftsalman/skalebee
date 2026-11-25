@@ -1,0 +1,64 @@
+@reference "tailwindcss";
+@reference "../../style.css";
+
+@layer components {
+
+
+  /* Drawer  -----------------------------------------------------------------------------------  */
+
+  .tui-drawer {
+    @apply w-full sm:w-2/3 md:w-2/3 lg:w-2/3 xl:w-1/3 h-full flex flex-col rounded-l-3xl transition-all duration-300 border border-gray-200 bg-white;
+  }
+
+  /* Drawer Header  -----------------------------------------------------------------------------------  */
+
+  .tui-drawer-header {
+    @apply px-4 py-3 flex items-center justify-between gap-4 rounded-tl-3xl border-b border-gray-200 bg-white;
+  }
+
+  .tui-drawer-header--content {
+    @apply flex flex-col justify-center flex-grow;
+  }
+
+  .tui-drawer-header--content {
+    h5 {
+      @apply font-semibold text-lg text-gray-800;
+    }
+
+    p {
+      @apply mt-0.5 text-sm leading-none text-gray-400;
+    }
+  }
+
+  .tui-drawer-header--close-btn {
+    @apply flex-shrink-0 p-0 w-9 h-9 hover:bg-gray-50 focus:shadow-gray-100 text-gray-400 focus:ring-gray-100 focus:border-gray-300;
+  }
+
+  /* Drawer Body  -----------------------------------------------------------------------------------  */
+
+  .tui-drawer-body {
+    @apply min-h-0 flex-1 p-4 overflow-y-auto overscroll-contain bg-white;
+  }
+
+  /* Drawer Footer  -----------------------------------------------------------------------------------  */
+
+  .tui-drawer-footer {
+    @apply p-4 flex items-center justify-end gap-2 border-t rounded-bl-3xl border-gray-200 bg-white;
+  }
+
+
+  /*  */
+
+  .tui-drawer-popup {
+    @apply flex flex-col z-50 [--bleed:0rem] supports-[-webkit-touch-callout:none]:[--bleed:0px] h-full w-[calc(100%-16px)] sm:w-2/3 md:w-2/3 lg:w-2/3 xl:w-1/3 max-w-[calc(100vw-3rem+3rem)] touch-auto bg-white text-neutral-950 outline-none shadow-[0.25rem_0.25rem_0] shadow-black/12 transform-[translateX(var(--drawer-swipe-movement-x))] transition-transform duration-450 ease-[cubic-bezier(0.32,0.72,0,1)] data-swiping:select-none data-ending-style:transform-[translateX(calc(100%-var(--bleed)+var(--viewport-padding)+2px))] data-starting-style:transform-[translateX(calc(100%-var(--bleed)+var(--viewport-padding)+2px))] data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)] supports-[-webkit-touch-callout:none]:mr-0 supports-[-webkit-touch-callout:none]:w-[20rem] supports-[-webkit-touch-callout:none]:max-w-[calc(100vw-3rem)] supports-[-webkit-touch-callout:none]:border supports-[-webkit-touch-callout:none]:pr-6 rounded-l-3xl border-l border-gray-200;
+  }
+
+  .tui-drawer-backdrop {
+    @apply [--backdrop-opacity:0.2] [--bleed:3rem] fixed inset-0 z-50 min-h-dvh bg-black opacity-[calc(var(--backdrop-opacity)*(1-var(--drawer-swipe-progress)))] transition-opacity duration-450 ease-[cubic-bezier(0.32,0.72,0,1)] data-swiping:duration-0 data-ending-style:opacity-0 data-starting-style:opacity-0 data-ending-style:duration-[calc(var(--drawer-swipe-strength)*400ms)] supports-[-webkit-touch-callout:none]:absolute;
+  }
+
+  .tui-drawer-viewport {
+    @apply [--viewport-padding:0px] z-50 supports-[-webkit-touch-callout:none]:[--viewport-padding:0.625rem] fixed inset-0 flex items-stretch justify-end p-(--viewport-padding);
+  }
+  
+}

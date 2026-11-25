@@ -1,0 +1,22 @@
+@reference "tailwindcss";
+@reference "../../style.css";
+
+@layer components {
+
+
+  .tui-menu-positioner {
+    @apply outline-hidden z-50;
+  }
+
+  .tui-menu-popup {
+    @apply p-1 px-0 relative origin-(--transform-origin) border-2 border-gray-200 bg-white rounded-lg text-gray-800 shadow-lg shadow-black/12 outline-hidden transition-[scale,opacity] duration-100 ease-out data-ending-style:scale-[0.98] data-ending-style:opacity-0 data-starting-style:scale-[0.98] data-starting-style:opacity-0  z-50;
+  }
+
+  .tui-menu-seprator {
+    @apply mx-1 my-1 h-px bg-gray-200;
+  }
+
+  .tui-menu-item {
+    @apply rounded-lg flex cursor-default py-2 pr-8 pl-4 text-sm text-gray-800 leading-4 outline-hidden select-none data-highlighted:relative data-highlighted:z-0 data-highlighted:text-gray-600 data-highlighted:cursor-pointer data-highlighted:before:rounded-sm data-highlighted:before:absolute data-highlighted:before:inset-x-1 data-highlighted:before:inset-y-0 data-highlighted:before:z-[-1] data-highlighted:before:bg-gray-100 data-highlighted:before:content-[''] data-disabled:text-neutral-400  z-50 ;
+  }
+}

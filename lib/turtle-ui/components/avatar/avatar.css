@@ -1,0 +1,36 @@
+@reference "tailwindcss";
+@reference "../../style.css";
+
+@layer components {
+  /* .tui-avatar {
+    @apply size-11 flex items-center justify-center rounded-full font-semibold bg-brand-500;
+  }
+
+  .tui-avatar-loading {
+    @apply animate-pulse bg-gray-300;
+  } */
+
+  .tui-avatar-img {
+    @apply size-full object-cover;
+  }
+
+  /* new */
+
+  .tui-avatar-root {
+    /* @apply inline-flex size-8 items-center justify-center overflow-hidden rounded-full bg-neutral-200 align-middle text-sm leading-none font-normal text-neutral-950 select-none dark:bg-neutral-800 dark:text-gray-800; */
+    @apply inline-flex size-11 items-center justify-center overflow-hidden rounded-full bg-gray-200 align-middle text-sm leading-none font-normal text-gray-800 select-none;
+  }
+
+
+  .tui-avatar-loading {
+    @apply animate-pulse bg-gray-300;
+  }
+
+
+   .tui-avatar-fallback {
+    @apply flex size-full items-center justify-center text-sm;
+  }
+
+
+
+}

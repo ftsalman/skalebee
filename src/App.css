@@ -1,0 +1,155 @@
+/* turtle-ui styles (includes Tailwind CSS + theme tokens) */
+@import "../lib/turtle-ui/style.css";
+@import "lenis/dist/lenis.css";
+
+/*
+  Apple font stack:
+  - Apple devices (Mac / iPhone / iPad) use the real SF Pro system font.
+  - Other devices fall back to Inter (loaded in index.html), which closely matches SF Pro.
+*/
+@theme {
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+    "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-apple: var(--font-sans);
+  --font-mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Skalebee brand */
+  --color-bee-yellow: #ffd400;
+  --color-bee-gold: #f6b90f;
+  --color-bee-black: #0a0a0a;
+  --color-bee-ink: #161616;
+  --color-bee-cream: #faf8f1;
+
+  --animate-marquee: marquee var(--marquee-duration, 30s) linear infinite;
+  --animate-marquee-reverse: marquee var(--marquee-duration, 30s) linear infinite reverse;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 8s ease-in-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-14px); }
+  }
+}
+
+html {
+  /* Lenis animates the document scroll position frame by frame. */
+  scroll-behavior: auto;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  @apply bg-bee-cream text-bee-ink antialiased;
+}
+
+::selection {
+  @apply bg-bee-yellow text-black;
+}
+
+/* Pause marquees on hover */
+.marquee-pause:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    scroll-behavior: auto;
+  }
+  .marquee-track,
+  .animate-float,
+  .animate-float-slow {
+    animation: none !important;
+  }
+}
+
+/* ---------- Site-wide pill button (see components/common/PillButton.jsx) ----------
+   White pill + yellow arrow pill. On hover the arrow pill slides to the right
+   edge while the label slides left into the space it left behind. */
+.pill-btn {
+  --pb-h: 60px; /* button height */
+  --pb-pad: 5px; /* inset of the yellow pill */
+  --pb-icon-w: 70px; /* yellow pill width */
+  --pb-gap: 13px; /* yellow pill → label */
+  --pb-end: 30px; /* label → right edge */
+  --pb-hover-start: 17px; /* label's left padding while hovered */
+  --pb-ease: cubic-bezier(0.65, 0, 0.35, 1);
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: var(--pb-h);
+  padding: 0 var(--pb-end) 0 calc(var(--pb-pad) + var(--pb-icon-w) + var(--pb-gap));
+  overflow: hidden;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #141414;
+  font-family: var(--font-sans);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.05),
+    0 6px 18px -10px rgba(0, 0, 0, 0.22);
+}
+.pill-btn-icon {
+  position: absolute;
+  top: var(--pb-pad);
+  bottom: var(--pb-pad);
+  left: var(--pb-pad);
+  display: grid;
+  place-items: center;
+  width: var(--pb-icon-w);
+  border-radius: 999px;
+  background: var(--color-bee-yellow, #ffd400);
+  color: #1a1a1a;
+  font-size: 18px;
+  transition: left 0.55s var(--pb-ease);
+}
+.pill-btn-label {
+  display: inline-block;
+  transition: transform 0.55s var(--pb-ease);
+}
+.pill-btn:hover .pill-btn-icon,
+.pill-btn:focus-visible .pill-btn-icon {
+  left: calc(100% - var(--pb-pad) - var(--pb-icon-w));
+}
+.pill-btn:hover .pill-btn-label,
+.pill-btn:focus-visible .pill-btn-label {
+  transform: translateX(calc(var(--pb-hover-start) - var(--pb-pad) - var(--pb-icon-w) - var(--pb-gap)));
+}
+.pill-btn:focus-visible {
+  outline: 3px solid var(--color-bee-yellow, #ffd400);
+  outline-offset: 4px;
+}
+.pill-btn-sm {
+  --pb-h: 46px;
+  --pb-pad: 4px;
+  --pb-icon-w: 54px;
+  --pb-gap: 11px;
+  --pb-end: 20px;
+  --pb-hover-start: 14px;
+  font-size: 15px;
+}
+.pill-btn-sm .pill-btn-icon {
+  font-size: 15px;
+}
+.pill-btn-block {
+  display: flex;
+  width: 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .pill-btn-icon,
+  .pill-btn-label {
+    transition: none;
+  }
+}

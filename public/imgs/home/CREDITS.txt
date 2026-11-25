@@ -1,0 +1,22 @@
+﻿Skalebee homepage illustrative photography
+
+These images illustrate the existing sample campaigns. They are not evidence of work for the named sample clients.
+
+fashion.jpg — LOGAN WEAVER | @LGNWVR
+https://unsplash.com/photos/clothing-rack-displaying-hoodies-and-a-hat-YXfc5Ig9goo
+
+coffee.jpg — George Catalina
+https://unsplash.com/photos/a-coffee-cup-sitting-on-top-of-a-table-41-8oEovT9M
+
+skincare.jpg — Ela De Pure
+https://unsplash.com/photos/retinol-serum-bottles-and-facial-cleanser-tube-0nH1XIq5rqw
+
+workspace.jpg — Zoshua Colah
+https://unsplash.com/photos/a-dimly-lit-desk-with-a-laptop-and-monitor-IUKdnYUlDco
+
+Source pages list these photos as free to use under the Unsplash License:
+https://unsplash.com/license
+
+Company portrait: existing project asset /imgs/refeek.png.
+Brand marks: existing project assets /svgs/.
+Noto Sans Mono: open-source Google font, locally stored in /fonts/noto-sans-mono.woff2.

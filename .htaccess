@@ -1,0 +1,11 @@
+# Superseded: the build now writes dist/.htaccess (real 404s, compression, caching) from
+# seo.plugin.js. Deploy the dist/ folder as-is; this file is kept only for reference.
+# Old SPA fallback for Apache hosting:
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

@@ -1,0 +1,516 @@
+/* ---------- 4-step brief (Contact page) ---------- */
+.brief {
+  --brief-ink: #3d3b52;
+  --brief-muted: #8d8aa3;
+  --brief-card: #f3f3f6;
+  --brief-yellow: #ffd400;
+  --brief-dark: #17171b;
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: clamp(32px, 6vw, 110px);
+  align-items: stretch;
+  width: 100%;
+  max-width: 1640px;
+  margin: 0 auto;
+  padding: clamp(40px, 6vw, 90px) clamp(22px, 4vw, 80px) clamp(70px, 8vw, 120px);
+  color: var(--brief-ink);
+  transition:
+    grid-template-columns 0.7s cubic-bezier(0.65, 0, 0.35, 1),
+    gap 0.7s cubic-bezier(0.65, 0, 0.35, 1);
+}
+/* After step 1 the intro fades away and the card glides to the centre */
+.brief.is-focused {
+  grid-template-columns: minmax(0, 0fr) minmax(0, 1fr);
+  gap: 0;
+}
+
+/* Left column */
+.brief-intro {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  transition:
+    opacity 0.35s ease,
+    visibility 0.35s;
+}
+/* Keep the intro's own width while its column closes (it is clipped, not re-wrapped), so the
+   section keeps its height and the card simply glides to the centre */
+.brief-intro > * {
+  width: clamp(320px, 38vw, 640px);
+  max-width: none;
+}
+.brief.is-focused .brief-intro {
+  opacity: 0;
+  visibility: hidden;
+}
+.brief-title {
+  margin: 0;
+  font-size: clamp(36px, 3.4vw, 58px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: -0.05em;
+}
+.brief-title span {
+  display: block;
+  color: var(--brief-muted);
+}
+.brief-note {
+  margin: 22px 0 0;
+  font-size: 18px;
+  color: #6c6a80;
+}
+.brief-intro-chat {
+  margin-top: auto;
+  padding-top: 56px;
+}
+.brief-signature {
+  display: block;
+  margin: 8px 0 0 64px;
+  font:
+    500 13px/1.4 "Home Mono",
+    ui-monospace,
+    monospace;
+  color: var(--brief-muted);
+}
+
+/* Chat (avatar + typing dots / bubble) */
+.brief-chat {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+}
+.brief-avatar {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #3a3a33, #111 70%);
+}
+.brief-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.brief-avatar .brief-avatar-mark {
+  width: 50%;
+  height: 50%;
+  object-fit: contain;
+}
+.brief-chat-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.brief-bubble {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 18px 28px;
+  border-radius: 22px 22px 22px 6px;
+  background: var(--brief-card);
+  font-size: 18px;
+  line-height: 1.55;
+  animation: brief-pop 0.45s cubic-bezier(0.2, 1.3, 0.4, 1) both;
+  transform-origin: bottom left;
+}
+.brief-typing {
+  display: inline-flex;
+  gap: 5px;
+  padding: 16px 18px;
+  border-radius: 18px 18px 18px 6px;
+  background: var(--brief-card);
+}
+.brief-typing i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--brief-muted);
+  animation: brief-dot 1s ease-in-out infinite;
+}
+.brief-typing i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.brief-typing i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.brief-meta {
+  font:
+    500 12px/1.4 "Home Mono",
+    ui-monospace,
+    monospace;
+  color: var(--brief-muted);
+  text-align: right;
+}
+@keyframes brief-dot {
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+    opacity: 0.45;
+  }
+  30% {
+    transform: translateY(-4px);
+    opacity: 1;
+  }
+}
+@keyframes brief-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.85) translateY(8px);
+  }
+}
+
+/* Card */
+.brief-card {
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
+  width: 100%;
+  max-width: 1000px;
+  min-height: 480px;
+  padding: clamp(28px, 3.4vw, 56px) clamp(20px, 3.4vw, 56px) 28px;
+  border-radius: 32px;
+  background: var(--brief-card);
+  box-shadow:
+    0 0 0 1px #ededf2,
+    0 24px 60px rgba(40, 40, 70, 0.05);
+}
+.brief-step {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  justify-content: center;
+}
+.brief-question {
+  margin: 0 0 clamp(24px, 3vw, 44px);
+  font-size: clamp(24px, 2vw, 32px);
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  text-align: center;
+}
+.brief-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+}
+.brief-option {
+  min-height: 64px;
+  padding: 0 20px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--brief-ink);
+  font: inherit;
+  font-size: 17px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.15s ease,
+    box-shadow 0.2s ease;
+}
+.brief-option:hover {
+  border-color: var(--brief-yellow);
+  background: #fffbe6;
+}
+.brief-option:active,
+.brief-option.is-picked {
+  transform: scale(0.97);
+}
+.brief-option.is-selected {
+  border-color: var(--brief-yellow);
+  background: var(--brief-yellow);
+  color: var(--brief-dark);
+  box-shadow: 0 6px 18px rgba(255, 196, 0, 0.35);
+}
+.brief-option:focus-visible,
+.brief-back:focus-visible,
+.brief-submit:focus-visible {
+  outline: 3px solid var(--brief-dark);
+  outline-offset: 3px;
+}
+
+/* Step 4 form */
+.brief-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  max-width: 660px;
+  margin: 0 auto;
+}
+.brief-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+.brief-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.brief-field > span {
+  padding-left: 20px;
+  font:
+    500 14px/1.4 "Home Mono",
+    ui-monospace,
+    monospace;
+  color: #6c6a80;
+}
+.brief-field input,
+.brief-field textarea {
+  width: 100%;
+  min-height: 60px;
+  padding: 16px 20px;
+  border: 1px solid transparent;
+  border-radius: 18px;
+  background: #fff;
+  color: var(--brief-ink);
+  font: inherit;
+  font-size: 16px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+.brief-field textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+.brief-field input::placeholder,
+.brief-field textarea::placeholder {
+  color: #8d8aa3;
+}
+.brief-field input:focus,
+.brief-field textarea:focus {
+  outline: none;
+  border-color: var(--brief-dark);
+  box-shadow: 0 0 0 4px rgba(255, 212, 0, 0.45);
+}
+.brief-field .has-error {
+  border-color: #e5484d;
+  box-shadow: 0 0 0 3px rgba(229, 72, 77, 0.15);
+}
+.brief-error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: -6px 0 0 4px;
+  color: #c8323a;
+  font-size: 14px;
+}
+.brief-error a {
+  text-decoration: underline;
+}
+.brief-submit {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-height: 60px;
+  margin-top: 10px;
+  border: 0;
+  border-radius: 999px;
+  background: radial-gradient(
+    120% 120% at 50% 0%,
+    #34343a 0%,
+    #17171b 55%,
+    #0b0b0d 100%
+  );
+  color: #fff;
+  font: inherit;
+  font-size: 18px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+.brief-submit:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 14px 30px rgba(0, 0, 0, 0.28),
+    inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+.brief-submit-arrow {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: var(--brief-yellow);
+  color: var(--brief-dark);
+  transition: transform 0.25s ease;
+}
+.brief-submit:hover .brief-submit-arrow {
+  transform: translateX(4px);
+}
+.brief-submit:disabled {
+  background: #b9b8c4;
+  color: #fff;
+  cursor: progress;
+  transform: none;
+  box-shadow: none;
+}
+.brief-privacy {
+  margin: 0;
+  color: #6c6a80;
+  font-size: 15px;
+  text-align: center;
+}
+
+/* Done */
+.brief-done {
+  align-items: center;
+}
+
+/* Footer: back button + progress */
+.brief-foot {
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  margin-top: clamp(24px, 3vw, 40px);
+}
+.brief-back,
+.brief-back-spacer {
+  width: 44px;
+  height: 44px;
+}
+.brief-back {
+  display: grid;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--brief-ink);
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(40, 40, 70, 0.06);
+  transition:
+    background-color 0.2s ease,
+    transform 0.2s ease;
+}
+.brief-back:hover {
+  background: var(--brief-yellow);
+  transform: translateX(-2px);
+}
+.brief-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+.brief-progress-text {
+  font:
+    500 14px/1 "Home Mono",
+    ui-monospace,
+    monospace;
+  color: #6c6a80;
+}
+.brief-progress-bars {
+  display: flex;
+  gap: 10px;
+}
+.brief-progress-bars i {
+  display: block;
+  width: 26px;
+  height: 3px;
+  border-radius: 3px;
+  background: #d7d6e0;
+  transition:
+    width 0.4s ease,
+    background-color 0.4s ease;
+}
+.brief-progress-bars i.is-done {
+  background: #8d8aa3;
+}
+.brief-progress-bars i.is-current {
+  width: 40px;
+  background: var(--brief-dark);
+}
+
+@media (max-width: 900px) {
+  .brief,
+  .brief.is-focused {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+  .brief.is-focused .brief-intro {
+    display: none;
+  }
+  .brief-intro > * {
+    width: auto;
+  }
+  .brief-intro-chat {
+    padding-top: 32px;
+  }
+  .brief-card {
+    min-height: 0;
+  }
+}
+@media (max-width: 560px) {
+  .brief-options,
+  .brief-fields {
+    grid-template-columns: 1fr;
+  }
+  .brief-option {
+    min-height: 56px;
+  }
+  .brief-bubble {
+    font-size: 16px;
+    padding: 14px 20px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .brief,
+  .brief-intro {
+    transition: none;
+  }
+  .brief-bubble,
+  .brief-typing i {
+    animation: none;
+  }
+}
+
+/* ---------- Popup variant: compact header + the step card ---------- */
+.brief.is-modal {
+  display: block;
+  max-width: none;
+  padding: 0;
+}
+.brief-modal-head {
+  padding: 0 56px 22px 4px; /* room for the close button */
+}
+.brief-modal-title {
+  margin: 0;
+  font-size: clamp(26px, 2.4vw, 36px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.04em;
+}
+.brief-modal-title span {
+  display: block;
+  color: var(--brief-muted);
+}
+.brief.is-modal .brief-card {
+  max-width: none;
+  min-height: 440px;
+  box-shadow: none;
+}
+@media (max-width: 560px) {
+  .brief.is-modal .brief-card {
+    min-height: 0;
+    padding: 24px 16px 18px;
+    border-radius: 24px;
+  }
+}
