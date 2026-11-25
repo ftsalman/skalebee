@@ -9,7 +9,7 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
 const COUNT = SERVICES.length;
 const LAST = COUNT - 1;
 const MOTION = "(prefers-reduced-motion: reduce)";
-const TICKS = Array.from({ length: 7 }, (_, i) => i);
+const TICKS = Array.from({ length: 12 }, (_, i) => i);
 
 // Track both ends of the pill independently as the selected tab expands.
 // The nearby ruler marks rise and settle as the pill passes them.
@@ -50,7 +50,10 @@ function ServiceRuler({ active, select }) {
       ticks.forEach((tick, i) => {
         const x = positions[i];
         const distance = Math.max(l - x, x - r, 0);
-        tick.style.transform = `scaleY(${1 + 1.55 * Math.exp(-distance / 32)})`;
+        // Ticks next to the pill grow a little and darken, fading out over ~30px.
+        const near = Math.exp(-distance / 26);
+        tick.style.transform = `scaleY(${1 + 0.7 * near})`;
+        tick.style.setProperty("--near", near.toFixed(3));
         tick.classList.toggle("is-passed", x < l);
       });
       if (wrap.scrollWidth > wrap.clientWidth) {

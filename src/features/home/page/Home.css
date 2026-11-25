@@ -133,214 +133,275 @@
   filter: grayscale(1);
 }
 
-/* Work cards have a clipped frame; only their image moves with scroll. */
-.home-work-stage {
+/* ---------- Work: two-column grid of large rounded project cards ---------- */
+.home-work {
+  padding-inline: clamp(12px, 2.6vw, 52px);
+}
+.home-work > .home-label,
+.home-work > .home-section-heading {
+  padding-inline: calc(var(--page-gutter) - clamp(12px, 2.6vw, 52px));
+}
+.home-work-grid {
   display: grid;
-  gap: 34px;
-  max-width: 800px;
-  margin-inline: auto;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
 }
-.home-work-track.is-stacked {
-  --pin-top: 108px;
+/* An odd last card takes the full row, in a wider frame */
+.home-work-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  aspect-ratio: 8 / 3;
 }
-.is-stacked .home-work-stage {
-  position: sticky;
-  top: var(--pin-top);
-  display: block;
-  height: calc(100svh - var(--pin-top));
-  max-width: none;
-  overflow: clip;
-  isolation: isolate;
-}
-.is-stacked .home-project {
-  position: absolute;
-  inset: var(--deck-inset) 0 auto;
-  margin-inline: auto;
-  width: min(
-    64vw,
-    1216px,
-    calc((100svh - var(--pin-top) - var(--deck-inset) - 20px) * 1.75)
-  );
-  transform-origin: center top;
-}
-.is-stacked .home-project-button {
-  position: relative;
-  display: block;
-}
-.is-stacked .home-project-visual {
-  aspect-ratio: 1.75;
-}
-.is-stacked .home-project-visual > img {
-  inset: 0;
-  height: 100%;
-}
-.is-stacked .home-project-caption {
-  position: absolute;
-  bottom: 28px;
-  left: 28px;
-  right: 88px;
-  color: white;
-  align-items: start;
-  flex-direction: column;
-  gap: 5px;
-  padding: 0;
-}
-.is-stacked .home-project-caption > span {
-  color: white;
-  background: #171713b3;
-  border-radius: 4px;
-  padding: 3px 8px;
-}
-.is-stacked .home-project-result {
-  display: none;
-}
-.is-stacked .home-project-button:focus-visible {
-  outline-offset: -4px;
-  outline-color: var(--home-accent);
-}
-.home-project-button {
-  width: 100%;
-  text-align: left;
-}
-.home-project-visual {
+
+.home-work-card {
+  --card-pad: clamp(18px, 1.9vw, 36px);
   position: relative;
   overflow: hidden;
   isolation: isolate;
-  aspect-ratio: 1.18;
-  border-radius: 7px;
-  background: #ded9ca;
-  color: white;
+  aspect-ratio: 4 / 3;
+  border-radius: clamp(20px, 1.6vw, 30px);
+  background: #1a1a1c;
+  color: #fff;
 }
-.home-project-visual::after {
+/* Bottom shade keeps the title and tags readable on any image */
+.home-work-card::after {
+  content: "";
   position: absolute;
   inset: 0;
-  z-index: -1;
-  content: "";
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0.2),
-    transparent 35%,
-    rgba(0, 0, 0, 0.68)
-  );
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 55%, rgba(0, 0, 0, 0.42) 100%);
   pointer-events: none;
 }
-.home-project-visual > img {
-  position: absolute;
-  z-index: -2;
-  inset: -8% 0;
-  width: 100%;
-  height: 116%;
-  object-fit: cover;
-  transition: scale 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
+.home-work-card.is-light {
+  color: #111;
 }
-.home-project-button:hover .home-project-visual > img {
+.home-work-card.is-light::after {
+  display: none;
+}
+
+.home-work-card-media {
+  position: absolute;
+  inset: 0;
+}
+.home-work-card-media > img,
+.home-work-card-media > video,
+.home-work-card-media > .home-project-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: scale 0.9s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.home-work-card:hover .home-work-card-media > * {
+  scale: 1.035;
+}
+
+/* Portrait pieces: whole poster centred on a blurred, colour-matched copy of itself */
+.home-work-card-media > .home-work-card-backdrop {
+  position: absolute;
+  inset: -12%;
+  width: auto;
+  height: auto;
+  background-size: cover;
+  background-position: center;
+  filter: blur(42px) saturate(1.3) brightness(0.92);
+}
+.home-work-card-media > .home-work-card-poster {
+  position: absolute;
+  top: 7%;
+  left: 50%;
+  width: auto;
+  height: 76%;
+  max-width: 70%;
+  object-fit: contain;
+  border-radius: clamp(10px, 0.9vw, 16px);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.28), 0 4px 12px rgba(0, 0, 0, 0.12);
+  translate: -50% 0;
+  transform-origin: center bottom;
+}
+.home-work-card:hover .home-work-card-media > .home-work-card-backdrop {
+  scale: 1;
+}
+.home-work-card:hover .home-work-card-media > .home-work-card-poster {
   scale: 1.04;
 }
-.home-project-number {
-  position: absolute;
-  top: 24px;
-  left: 24px;
-  font:
-    500 10px/1.5 "Home Mono",
-    monospace;
-  letter-spacing: 0.04em;
-}
-.home-project-result {
-  position: absolute;
-  bottom: 28px;
-  left: 28px;
-  display: flex;
-  flex-direction: column;
-  max-width: 75%;
-  gap: 6px;
-}
-.home-project-result strong {
-  font-size: clamp(46px, 6vw, 90px);
-  font-weight: 400;
-  letter-spacing: -0.07em;
-  line-height: 1;
-}
-.home-project-result > span {
-  font-size: 13px;
-}
-.home-project-arrow {
-  position: absolute;
-  bottom: 28px;
-  right: 25px;
+
+/* Logo on a coloured surface, for projects without a screenshot (cards + project dialog) */
+.home-project-logo {
   display: grid;
   place-items: center;
-  width: 51px;
-  height: 51px;
-  border: 1px solid #ffffff70;
-  border-radius: 50%;
-  transition:
-    background 0.3s,
-    color 0.3s,
-    rotate 0.3s;
+  width: 100%;
+  height: 100%;
+  min-height: 220px;
 }
-.home-project-button:hover .home-project-arrow {
-  background: var(--home-accent);
+.home-project-logo img {
+  width: auto;
+  max-width: 42%;
+  max-height: 30%;
+  object-fit: contain;
+}
+.home-project-logo b {
+  font-size: clamp(56px, 9vw, 150px);
+  font-weight: 500;
+  letter-spacing: -0.06em;
+  line-height: 1;
+}
+.home-project-logo.is-dark {
+  background:
+    radial-gradient(90% 70% at 50% 35%, #3a3a3f 0%, transparent 70%),
+    repeating-linear-gradient(180deg, rgba(255, 255, 255, 0.025) 0 1px, transparent 1px 3px),
+    linear-gradient(180deg, #2a2a2e, #0e0e10);
+  color: #fff;
+}
+.home-project-logo.is-light {
+  background:
+    radial-gradient(80% 70% at 50% 30%, #ffffff 0%, transparent 70%),
+    linear-gradient(180deg, #eef0f4, #d9dce3);
   color: #111;
-  border-color: var(--home-accent);
-  rotate: 45deg;
 }
-/* "See project" label that follows the mouse over a project image (mouse devices only) */
-.home-project-cursor {
+.home-project-logo.is-yellow {
+  background:
+    radial-gradient(80% 70% at 50% 25%, #fff1a6 0%, transparent 65%),
+    linear-gradient(180deg, #ffd84a, #f6b90f);
+  color: #111;
+}
+
+/* "View project" pill: top right, slides in on hover */
+.home-work-card-pill {
   position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 3;
-  display: none;
+  top: clamp(14px, 1.1vw, 20px);
+  right: clamp(14px, 1.1vw, 20px);
+  z-index: 2;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 11px 14px;
-  border-radius: 7px;
-  background: rgba(239, 234, 226, 0.82);
+  padding: 11px 16px 11px 18px;
+  border-radius: 999px;
+  background: #fff;
   color: #111;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
-  font: 700 14px/1 "Home Mono", monospace;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
-  white-space: nowrap;
-  pointer-events: none;
-  translate: calc(var(--cursor-x, 50%) - 50%) calc(var(--cursor-y, 50%) - 50%);
-  opacity: 0;
-  scale: 0.6;
-  transition:
-    translate 0.18s cubic-bezier(0.2, 0.7, 0.2, 1),
-    opacity 0.25s,
-    scale 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
-}
-@media (hover: hover) and (pointer: fine) {
-  .home-project-cursor {
-    display: inline-flex;
-  }
-  .home-project-visual:hover .home-project-cursor {
-    opacity: 1;
-    scale: 1;
-  }
-  .home-project-visual:hover {
-    cursor: none;
-  }
-}
-.home-project-caption {
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 16px;
-  padding-top: 19px;
-}
-.home-project-caption h3 {
+  font-size: 17px;
   font-weight: 500;
-  font-size: clamp(19px, 2vw, 27px);
-  letter-spacing: -0.04em;
+  letter-spacing: -0.01em;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  opacity: 0;
+  translate: 0 -8px;
+  transition: opacity 0.3s ease, translate 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  pointer-events: none;
 }
-.home-project-caption > span {
-  font-size: 11px;
-  color: #65655c;
-  text-align: right;
+.home-work-card:hover .home-work-card-pill,
+.home-work-card:has(:focus-visible) .home-work-card-pill {
+  opacity: 1;
+  translate: 0 0;
+}
+@media (hover: none) {
+  .home-work-card-pill {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+.home-work-card-footer {
+  position: absolute;
+  inset: auto var(--card-pad) var(--card-pad) var(--card-pad);
+  z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  pointer-events: none;
+}
+.home-work-card-title {
+  font-size: clamp(26px, 2.1vw, 40px);
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.18);
+}
+.home-work-card.is-light .home-work-card-title {
+  text-shadow: none;
+}
+.home-work-card-tags {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+/* Frosted glass tag */
+.home-work-card-tag {
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.38);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.16);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+  font-size: clamp(14px, 0.95vw, 17px);
+  font-weight: 500;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+.home-work-card.is-light .home-work-card-tag {
+  border-color: rgba(0, 0, 0, 0.14);
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7);
+}
+
+/* Invisible button over the whole card */
+.home-work-card-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  width: 100%;
+  border-radius: inherit;
+}
+.home-work-card-hit:focus-visible {
+  outline: 3px solid var(--home-accent);
+  outline-offset: -5px;
+}
+
+.home-work-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 28px;
+}
+.home-work-more-button {
+  padding: 14px 30px;
+  border: 1px solid #fff;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #f7f7f9, #ececf0);
+  box-shadow: 0 6px 16px rgba(30, 30, 60, 0.08), inset 0 1px 0 #fff;
+  font-size: 17px;
+  font-weight: 500;
+  color: #2f2f36;
+  transition: transform 0.25s ease;
+}
+.home-work-more-button:hover {
+  transform: translateY(-2px);
+}
+
+@media (max-width: 767px) {
+  .home-work-grid {
+    grid-template-columns: 1fr;
+  }
+  .home-work-card,
+  .home-work-card:last-child:nth-child(odd) {
+    aspect-ratio: 4 / 4.2;
+  }
+  .home-work-card-pill {
+    font-size: 15px;
+    padding: 9px 14px;
+  }
+  .home-work-card-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .home-work-card-tags {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
 }
 .home-project-dialog {
   position: fixed;
@@ -378,6 +439,20 @@
   width: 100%;
   max-height: 330px;
   object-fit: cover;
+}
+/* Project popup image: shown whole (posters are tall) on a soft backdrop */
+.home-dialog-visual {
+  display: grid;
+  place-items: center;
+  height: 330px;
+  overflow: hidden;
+  background: #ecebe6;
+}
+.home-dialog-visual > img,
+.home-dialog-visual > video {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
 .home-dialog-content {
   padding: clamp(24px, 5vw, 48px);
@@ -939,10 +1014,6 @@
   .home-faq {
     gap: 6%;
   }
-  .home-project-caption {
-    flex-direction: column;
-    gap: 4px;
-  }
   .home-service h3 button {
     gap: 12px;
   }
@@ -1008,27 +1079,6 @@
   .home-brand-word {
     gap: 30px;
     padding-right: 30px;
-  }
-  .home-project-visual {
-    aspect-ratio: 1.14;
-  }
-  .home-project-result {
-    bottom: 22px;
-    left: 22px;
-  }
-  .home-project-result strong {
-    font-size: 60px;
-  }
-  .home-project-caption {
-    flex-direction: row;
-    gap: 14px;
-  }
-  .home-project-caption h3 {
-    font-size: 21px;
-  }
-  .home-project-caption > span {
-    max-width: 45%;
-    font-size: 10px;
   }
   .home-services,
   .home-about-heading,
@@ -1175,7 +1225,7 @@
     animation: none !important;
     transition: none !important;
   }
-  .home-project-button:hover .home-project-visual > img {
+  .home-work-card:hover .home-work-card-media > * {
     scale: 1;
   }
 }
@@ -2794,7 +2844,7 @@
 .svc-ticks { flex: 1 0 auto; }
 .svc-step {
   position: relative;
-  z-index: 1;
+  z-index: 2;
   flex: none;
   height: 46px;
   padding: 0 7px;
@@ -2824,14 +2874,16 @@
   font-weight: 600;
   line-height: 1;
   letter-spacing: -0.025em;
-  transition: grid-template-columns 0.38s ease, padding 0.38s ease, opacity 0.2s ease;
+  filter: blur(4px);
+  transition: grid-template-columns 0.38s ease, padding 0.38s ease, opacity 0.25s ease, filter 0.35s ease;
 }
 .svc-step-label > span { overflow: hidden; white-space: nowrap; }
 .svc-step[aria-selected="true"] .svc-step-label {
   grid-template-columns: 1fr;
-  padding: 0 7px;
+  padding: 0 9px 0 8px;
   opacity: 1;
-  color: var(--home-ink);
+  filter: none;
+  color: #fff;
 }
 .svc-step.is-done .svc-step-num,
 .svc-step[aria-selected="true"] .svc-step-num {
@@ -2839,27 +2891,33 @@
   background: #17171b;
   color: #fff;
 }
-.svc-step[aria-selected="true"] .svc-step-num { background: #2c2c32; }
+.svc-step[aria-selected="true"] .svc-step-num { background: #34343b; }
 .svc-step:hover .svc-step-num { border-color: #85859b; }
+/* Black pill that stretches from step to step (sits above the ticks, below the steps) */
 .svc-indicator {
   position: absolute;
+  z-index: 1;
   inset: 8px auto 8px 0;
   border-radius: 99px;
-  background: var(--home-accent);
+  background: linear-gradient(180deg, #232328 0%, #111114 100%);
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 8%), 0 4px 12px rgb(20 20 30 / 18%);
   pointer-events: none;
 }
 .svc-ticks {
   justify-content: space-evenly;
   gap: 3px;
-  min-width: 25px;
+  min-width: 45px;
   height: 42px;
 }
+/* --near (0 to 1) is set from JS: 1 right beside the pill, 0 far away */
 .svc-ticks i {
-  width: 1px;
+  --tick: #dcdde5;
+  width: 1.5px;
   height: 16px;
-  background: #dfe0e8;
+  border-radius: 1px;
+  background: color-mix(in srgb, #6f7084 calc(var(--near, 0) * 100%), var(--tick));
 }
-.svc-ticks .is-passed { background: #57586f; }
+.svc-ticks .is-passed { --tick: #b3b4c3; }
 .svc-card-wrap {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
@@ -2932,7 +2990,7 @@
   .svc { min-height: 0; padding: 86px 20px 64px; }
   .svc-stepper-wrap { margin-top: 34px; }
   .svc-card-wrap { height: auto; min-height: 330px; }
-  .svc-ticks { min-width: 44px; }
+  .svc-ticks { min-width: 52px; }
 }
 @media (max-width: 700px) {
   .svc-title { max-width: 19ch; margin-inline: auto; }
@@ -2945,6 +3003,7 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .svc-step-label, .svc-poster, .svc-film { transition: none; }
+  .svc-step-label { filter: none; }
 }
 
 /* ---------- Contact (home): the 4-step brief from the Contact page ---------- */

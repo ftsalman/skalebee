@@ -15,6 +15,7 @@ import { CONTACT_INFO } from "@/constants/constants";
 import {
   APPROACH,
   CASE_STUDIES,
+  FEATURED_WORK,
   FAQS,
   SERVICES,
   STATS,
@@ -48,19 +49,25 @@ export const BrandStrip = () => (
   </section>
 );
 
-// Card visual: a screenshot if the brand has one (`image`), otherwise its logo on a coloured card
-const ProjectVisual = ({ project }) =>
-  project.image ? (
-    <img src={project.image} alt={`${project.client} project`} loading="lazy" width="1400" height="1050" />
-  ) : (
+// Card visual: a video or screenshot if the project has one, otherwise its logo on a coloured surface
+const ProjectVisual = ({ project }) => {
+  if (project.video) {
+    return (
+      <video src={project.video} poster={project.image} muted autoPlay loop playsInline preload="metadata" aria-label={`${project.client} project`} />
+    );
+  }
+  if (project.image) {
+    return <img src={project.image} alt={`${project.client} project`} loading="lazy" width="1400" height="1050" />;
+  }
+  return (
     <span className={`home-project-logo is-${project.theme || "dark"}`}>
       {project.logo ? <img src={project.logo} alt={`${project.client} logo`} loading="lazy" /> : <b>{project.client}</b>}
     </span>
   );
+};
 
-const ProjectDialog = ({ index, onClose }) => {
+const ProjectDialog = ({ project, onClose }) => {
   const dialogRef = useRef(null);
-  const project = CASE_STUDIES[index];
   useEffect(() => {
     const dialog = dialogRef.current;
     const oldOverflow = document.body.style.overflow;
@@ -117,27 +124,18 @@ const ProjectDialog = ({ index, onClose }) => {
   );
 };
 
-// Moves the "See project" label to the mouse position inside a project image
-const followCursor = (event) => {
-  const box = event.currentTarget.getBoundingClientRect();
-  event.currentTarget.style.setProperty(
-    "--cursor-x",
-    `${event.clientX - box.left}px`,
-  );
-  event.currentTarget.style.setProperty(
-    "--cursor-y",
-    `${event.clientY - box.top}px`,
-  );
-};
+// Cards without a photo or video sit on a light/yellow surface, so their text turns dark.
+const isLightCard = (project) => !project.image && !project.video && project.theme !== "dark";
+const WORK_PREVIEW_COUNT = 6;
 
 export const FeaturedWork = () => {
   const [selected, setSelected] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const projects = showAll ? FEATURED_WORK : FEATURED_WORK.slice(0, WORK_PREVIEW_COUNT);
+  const hasMore = FEATURED_WORK.length > WORK_PREVIEW_COUNT && !showAll;
+
   return (
-    <section
-      className="home-section home-work"
-      id="work"
-      aria-labelledby="work-heading"
-    >
+    <section className="home-section home-work" id="work" aria-labelledby="work-heading">
       <SectionLabel>Selected work</SectionLabel>
       <div className="home-section-heading">
         <div id="work-heading">
@@ -147,49 +145,55 @@ export const FeaturedWork = () => {
           Start a project <ArrowUpRightIcon size={21} />
         </Link>
       </div>
-      <div className="home-work-track">
-        <div className="home-work-stage">
-          {CASE_STUDIES.map((project, index) => (
-            <article key={project.client} className="home-project">
-              <button
-                className="home-project-button"
-                onClick={() => setSelected(index)}
-                aria-label={`About our work with ${project.client}`}
-              >
-                <div
-                  className="home-project-visual"
-                  onPointerEnter={followCursor}
-                  onPointerMove={followCursor}
-                >
+
+      <div className="home-work-grid">
+        {projects.map((project) => {
+          const tags = project.tags?.length ? project.tags : [project.category];
+          return (
+            <article key={project.client} className={`home-work-card${isLightCard(project) ? " is-light" : ""}`}>
+              <div className="home-work-card-media">
+                {project.fit === "contain" && project.image ? (
+                  <>
+                    {/* Blurred copy fills the card; the piece itself sits whole in the middle */}
+                    <span className="home-work-card-backdrop" style={{ backgroundImage: `url(${project.image})` }} aria-hidden="true" />
+                    <img className="home-work-card-poster" src={project.image} alt={`${project.client} project`} loading="lazy" />
+                  </>
+                ) : (
                   <ProjectVisual project={project} />
-                  <span className="home-project-cursor" aria-hidden="true">
-                    See project <ArrowRightIcon size={15} weight="bold" />
-                  </span>
-                  <span className="home-project-number">
-                    0{index + 1} / {project.category}
-                  </span>
-                  {project.result && (
-                    <span className="home-project-result">
-                      <strong>{project.result}</strong>
-                      <span>{project.resultLabel}</span>
-                    </span>
-                  )}
-                  <span className="home-project-arrow">
-                    <ArrowUpRightIcon size={27} />
-                  </span>
-                </div>
-                <div className="home-project-caption">
-                  <h3>{project.client}</h3>
-                  <span>{project.category}</span>
-                </div>
-              </button>
+                )}
+              </div>
+              <span className="home-work-card-pill" aria-hidden="true">
+                View project <ArrowUpRightIcon size={18} />
+              </span>
+              <div className="home-work-card-footer">
+                <h3 className="home-work-card-title">{project.client}</h3>
+                <ul className="home-work-card-tags" aria-label="Services">
+                  {tags.map((tag) => (
+                    <li key={tag} className="home-work-card-tag">{tag}</li>
+                  ))}
+                </ul>
+              </div>
+              {/* Covers the whole card so any click opens the project */}
+              <button
+                type="button"
+                className="home-work-card-hit"
+                onClick={() => setSelected(project)}
+                aria-label={`View project: ${project.client}`}
+              />
             </article>
-          ))}
-        </div>
+          );
+        })}
       </div>
-      {selected !== null && (
-        <ProjectDialog index={selected} onClose={() => setSelected(null)} />
+
+      {hasMore && (
+        <div className="home-work-more">
+          <button type="button" className="home-work-more-button" onClick={() => setShowAll(true)}>
+            Show more
+          </button>
+        </div>
       )}
+
+      {selected && <ProjectDialog project={selected} onClose={() => setSelected(null)} />}
     </section>
   );
 };

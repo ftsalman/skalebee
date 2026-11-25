@@ -11,15 +11,15 @@ export const MainLayout = () => {
   useSmoothScroll();
   const { pathname } = useLocation();
   usePageSeo(pathname);
-  // The navbar floats over the page. The home hero sits behind it;
-  // other pages get top space so their content starts below it.
+  // The navbar is a dock floating at the bottom of the screen, so pages need no top
+  // offset for it; non-home pages just get a little breathing room at the top.
   const isHome = pathname === ROUTES.HOME;
 
   return (
     <div className="flex min-h-dvh flex-col bg-bee-cream">
       <Navbar />
       {/* Full width: each page/section sets its own container */}
-      <main id="main-content" tabIndex={-1} className={`flex flex-1 flex-col ${isHome ? "" : "pt-24 lg:pt-[150px]"}`}>
+      <main id="main-content" tabIndex={-1} className={`flex flex-1 flex-col ${isHome ? "" : "pt-12 lg:pt-20"}`}>
         <Outlet />
       </main>
       <Footer rounded={isHome} />

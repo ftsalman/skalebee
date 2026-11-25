@@ -149,6 +149,32 @@ export const CASE_STUDIES = [
   },
 ];
 
+// More work for the Work grid (same files as the hero wall and "Let’s build yours").
+// `fit: "contain"` shows a portrait piece whole, centred on a blurred copy of itself;
+// leave it out for landscape images, which fill the card.
+export const WORK_SAMPLES = [
+  { client: "Productivity dashboard", category: "Product design", image: "/imgs/hero/work-8.jpg", tags: ["Web app", "UI design"] },
+  { client: "Web studio launch", category: "Launch campaign", image: "/imgs/hero/work-1.jpg", fit: "contain", tags: ["Social", "Launch"] },
+  { client: "Influencer agency", category: "Website", image: "/imgs/hero/work-6.jpg", fit: "contain", tags: ["Website", "Landing page"] },
+  { client: "Audio store", category: "E-commerce", image: "/imgs/hero/work-9.jpg", tags: ["E-commerce", "UI design"] },
+  { client: "Digital marketing course", category: "Ad creative", image: "/imgs/hero/work-2.jpg", fit: "contain", tags: ["Meta Ads", "Creative"] },
+  { client: "Podcast platform", category: "Website", image: "/imgs/hero/work-7.jpg", fit: "contain", tags: ["Website", "UI design"] },
+  { client: "App studio", category: "Ad creative", image: "/imgs/hero/work-4.jpg", fit: "contain", tags: ["Ads", "Creative"] },
+  { client: "B2B testimonials", category: "Website", image: "/imgs/hero/work-11.jpg", tags: ["Website", "Trust"] },
+  { client: "Gadget brand flyers", category: "Social media", image: "/imgs/hero/work-3.jpg", fit: "contain", tags: ["Social", "Design"] },
+  { client: "Videomaker course", category: "Lead generation", image: "/imgs/hero/work-5.jpg", fit: "contain", tags: ["Meta Ads", "Leads"] },
+  { client: "Streaming app concept", category: "Product concept", image: "/imgs/hero/work-10.jpg", fit: "contain", tags: ["Product", "Concept"] },
+];
+
+// What the Work grid shows: the work samples with the client brands mixed in (every 4th card).
+export const FEATURED_WORK = CASE_STUDIES.reduce(
+  (list, client, i) => {
+    list.splice(Math.min(2 + i * 4, list.length), 0, client);
+    return list;
+  },
+  [...WORK_SAMPLES],
+);
+
 // "Your growth journey in 8 simple steps" (skalebee.com)
 export const APPROACH = [
   { title: "Meta Ads", description: "Facebook and Instagram ads put your brand in front of the right people." },
