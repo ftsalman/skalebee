@@ -20,7 +20,18 @@ import { MetaSpecialistSection } from "../components/MetaSpecialistSection";
 import { ServicesSection } from "../components/ServicesSection";
 import { BriefSection } from "@/features/contact/BriefSection";
 import useHomeMotion from "@/hooks/useHomeMotion";
-import "./Home.css";
+import { SECTION_Y } from "../components/homeStyles";
+
+// Page-wide: paper background, section anchors clear the top of the screen, and one
+// orange focus ring for every link, button and FAQ question.
+const PAGE = [
+  "bg-home-paper text-home-ink",
+  // Phones: wide artwork must not widen the page's scroll area
+  "max-sm:relative max-sm:overflow-x-clip",
+  "[&_section[id]]:scroll-mt-[125px] max-tablet:[&_section[id]]:scroll-mt-[95px]",
+  "[&_:is(button,summary)]:cursor-pointer",
+  "[&_:is(button,a,summary):focus-visible]:outline-3 [&_:is(button,a,summary):focus-visible]:outline-offset-[6px] [&_:is(button,a,summary):focus-visible]:outline-[#cf6300]",
+].join(" ");
 
 // Home page: sections in order. Scroll animations are applied to all of them here.
 export const Home = () => {
@@ -29,7 +40,7 @@ export const Home = () => {
   useHomeMotion(scopeRef);
 
   return (
-    <div ref={scopeRef} className="home-page">
+    <div ref={scopeRef} className={PAGE}>
       <Hero />
       {/* 1. Introduce */}
       <BrandStrip />
@@ -51,8 +62,8 @@ export const Home = () => {
       <TestimonialsSection />
       <FaqSection />
       {/* 7. Contact */}
-      <div className="home-brief">
-        <BriefSection id="contact" headingLevel="h2" />
+      <div className="bg-white">
+        <BriefSection id="contact" headingLevel="h2" className={SECTION_Y} />
       </div>
     </div>
   );

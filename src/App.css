@@ -1,6 +1,18 @@
-/* turtle-ui styles (includes Tailwind CSS + theme tokens) */
-@import "../lib/turtle-ui/style.css";
+/*
+  Tailwind entry file: the only stylesheet in src/. It holds design tokens (colours,
+  fonts, spacing, breakpoints) and the page base. Every component is styled with
+  Tailwind classes, and every animation runs on GSAP.
+*/
+@import "../lib/turtle-ui/style.css"; /* turtle-ui: Tailwind + its theme tokens */
 @import "lenis/dist/lenis.css";
+
+@font-face {
+  font-family: "Home Mono";
+  src: url("/fonts/noto-sans-mono.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
 /*
   Apple font stack:
@@ -12,6 +24,7 @@
     "Inter", "Helvetica Neue", Helvetica, Arial, sans-serif;
   --font-apple: var(--font-sans);
   --font-mono: "Space Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-home-mono: "Home Mono", ui-monospace, monospace; /* small labels on the home page */
 
   /* Skalebee brand */
   --color-bee-yellow: #ffd400;
@@ -20,19 +33,20 @@
   --color-bee-ink: #161616;
   --color-bee-cream: #faf8f1;
 
-  --animate-marquee: marquee var(--marquee-duration, 30s) linear infinite;
-  --animate-marquee-reverse: marquee var(--marquee-duration, 30s) linear infinite reverse;
-  --animate-float: float 6s ease-in-out infinite;
-  --animate-float-slow: float 8s ease-in-out infinite;
+  /* Home page */
+  --color-home-paper: #f2efe8;
+  --color-home-ink: #171713;
+  --color-home-line: #d7d4cb;
+  --color-home-accent: #ffd400;
+  --color-home-muted: #73736a;
+  --color-svc-ink: #4d4e65;
+  --color-svc-muted: #898aa2;
 
-  @keyframes marquee {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-14px); }
-  }
+  /* Side gutter shared by every home section: px-gutter */
+  --spacing-gutter: clamp(22px, 4vw, 80px);
+
+  /* "tablet:" = 701px and up, so "max-tablet:" means phones (700px and below) */
+  --breakpoint-tablet: 701px;
 }
 
 html {
@@ -49,107 +63,4 @@ body {
 
 ::selection {
   @apply bg-bee-yellow text-black;
-}
-
-/* Pause marquees on hover */
-.marquee-pause:hover .marquee-track {
-  animation-play-state: paused;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    scroll-behavior: auto;
-  }
-  .marquee-track,
-  .animate-float,
-  .animate-float-slow {
-    animation: none !important;
-  }
-}
-
-/* ---------- Site-wide pill button (see components/common/PillButton.jsx) ----------
-   White pill + yellow arrow pill. On hover the arrow pill slides to the right
-   edge while the label slides left into the space it left behind. */
-.pill-btn {
-  --pb-h: 60px; /* button height */
-  --pb-pad: 5px; /* inset of the yellow pill */
-  --pb-icon-w: 70px; /* yellow pill width */
-  --pb-gap: 13px; /* yellow pill → label */
-  --pb-end: 30px; /* label → right edge */
-  --pb-hover-start: 17px; /* label's left padding while hovered */
-  --pb-ease: cubic-bezier(0.65, 0, 0.35, 1);
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  height: var(--pb-h);
-  padding: 0 var(--pb-end) 0 calc(var(--pb-pad) + var(--pb-icon-w) + var(--pb-gap));
-  overflow: hidden;
-  border: 0;
-  border-radius: 999px;
-  background: #fff;
-  color: #141414;
-  font-family: var(--font-sans);
-  font-size: 18px;
-  font-weight: 400;
-  line-height: 1;
-  letter-spacing: -0.01em;
-  text-transform: none;
-  white-space: nowrap;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow:
-    0 0 0 1px rgba(0, 0, 0, 0.05),
-    0 6px 18px -10px rgba(0, 0, 0, 0.22);
-}
-.pill-btn-icon {
-  position: absolute;
-  top: var(--pb-pad);
-  bottom: var(--pb-pad);
-  left: var(--pb-pad);
-  display: grid;
-  place-items: center;
-  width: var(--pb-icon-w);
-  border-radius: 999px;
-  background: var(--color-bee-yellow, #ffd400);
-  color: #1a1a1a;
-  font-size: 18px;
-  transition: left 0.55s var(--pb-ease);
-}
-.pill-btn-label {
-  display: inline-block;
-  transition: transform 0.55s var(--pb-ease);
-}
-.pill-btn:hover .pill-btn-icon,
-.pill-btn:focus-visible .pill-btn-icon {
-  left: calc(100% - var(--pb-pad) - var(--pb-icon-w));
-}
-.pill-btn:hover .pill-btn-label,
-.pill-btn:focus-visible .pill-btn-label {
-  transform: translateX(calc(var(--pb-hover-start) - var(--pb-pad) - var(--pb-icon-w) - var(--pb-gap)));
-}
-.pill-btn:focus-visible {
-  outline: 3px solid var(--color-bee-yellow, #ffd400);
-  outline-offset: 4px;
-}
-.pill-btn-sm {
-  --pb-h: 46px;
-  --pb-pad: 4px;
-  --pb-icon-w: 54px;
-  --pb-gap: 11px;
-  --pb-end: 20px;
-  --pb-hover-start: 14px;
-  font-size: 15px;
-}
-.pill-btn-sm .pill-btn-icon {
-  font-size: 15px;
-}
-.pill-btn-block {
-  display: flex;
-  width: 100%;
-}
-@media (prefers-reduced-motion: reduce) {
-  .pill-btn-icon,
-  .pill-btn-label {
-    transition: none;
-  }
 }

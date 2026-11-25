@@ -5,10 +5,12 @@ import { ContactModal } from "@/components/contact/ContactModal";
 import { BuildCtaSection } from "@/features/home/components/BuildCtaSection";
 import useSmoothScroll from "@/hooks/useSmoothScroll";
 import usePageSeo from "@/hooks/usePageSeo";
+import useHoverMotion from "@/hooks/useHoverMotion";
 import { ROUTES } from "@/constants/constants";
 
 export const MainLayout = () => {
   useSmoothScroll();
+  useHoverMotion(); // GSAP hover effects for every [data-hover] element
   const { pathname } = useLocation();
   usePageSeo(pathname);
   // The navbar is a dock floating at the bottom of the screen, so pages need no top

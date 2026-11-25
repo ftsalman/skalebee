@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { Fragment, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -11,8 +11,10 @@ import {
   PaperPlaneTiltIcon,
   VideoCameraIcon,
 } from "@phosphor-icons/react";
+import { cn } from "@turtle-ui/utils";
 import { HERO, HERO_WALL } from "../constants/homeData";
 import { contactClick } from "@/components/contact/contactActions";
+import { hoverTo } from "@/hooks/useHoverMotion";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
 
@@ -33,6 +35,7 @@ const COLUMNS_PER_SIDE = 4;
 const TILES_PER_COLUMN = 14; // enough to cover the visible arc before the loop repeats
 const A_START = 0.85; // nearest column (mostly off-screen, peeks in at the corners)
 const A_STEP = 0.2; // depth of one column
+const K_BASE = 1.6; // vertical stretch of the tunnel (1 = round)
 const HEIGHTS = [1.25, 0.8, 1, 0.7, 1.2, 0.9, 1.05, 0.75, 1.15, 0.85, 1, 0.8, 1.2, 0.9];
 
 // Walk the tile list with a step that shares no factor with its length, so every column cycles
@@ -42,117 +45,217 @@ const STEP = [5, 7, 3, 2, 1].find((n) => gcd(n, HERO_WALL.length) === 1);
 const columnTiles = (column) =>
   Array.from({ length: TILES_PER_COLUMN }, (_, i) => HERO_WALL[(column * 4 + i * STEP) % HERO_WALL.length]);
 
-/* ---------- Tiles (mockups of marketing work) ---------- */
-const Avatar = ({ label }) => <span className="wt-avatar">{label.charAt(0)}</span>;
+/* ---------- Tiles (mockups of marketing work) ----------
+   Sizes are in cqw: percent of the tile's own width (each tile is a size container). */
+const FILL = "block size-full object-cover";
+const GROW_IMG = "block min-h-0 w-full flex-1 object-cover";
+const HEAD = "flex items-center gap-[3cqw] px-[4cqw] py-[3.5cqw] text-[4cqw] leading-[1.2]";
+const MORE = "ml-auto text-[6cqw]";
+
+const Avatar = ({ label }) => (
+  <span className="grid size-[9cqw] flex-none place-items-center rounded-full bg-[#171713] text-[4.4cqw] font-bold text-[#ffd400]">
+    {label.charAt(0)}
+  </span>
+);
+
+const DASH = {
+  dark: { box: "bg-[#121217] text-white", area: "fill-[rgba(255,212,0,0.18)]", line: "stroke-[#ffd400]", up: "text-[#22c55e]" },
+  light: { box: "bg-white text-[#111]", area: "fill-[rgba(8,102,255,0.22)]", line: "stroke-[#3b82f6]", up: "text-[#22c55e]" },
+  blue: { box: "bg-[linear-gradient(160deg,#2f6bff,#0a2fb8)] text-white", area: "fill-white/20", line: "stroke-white", up: "text-[#b6ffcb]" },
+};
+const STAT = {
+  yellow: "bg-[#ffd400] text-[#171713]",
+  blue: "bg-[linear-gradient(160deg,#2f6bff,#0a2fb8)] text-white",
+  dark: "bg-[#171713] text-white",
+  light: "bg-[#f2efe8] text-[#171713]",
+};
 
 const TileBody = ({ tile }) => {
   switch (tile.kind) {
     case "video":
-      return <video className="wt-fill" src={tile.video} poster={tile.poster} muted autoPlay loop playsInline preload="metadata" />;
+      return <video className={FILL} src={tile.video} poster={tile.poster} muted autoPlay loop playsInline preload="metadata" />;
 
-    case "ad":
+    case "ad": // Meta ad
       return (
-        <div className="wt-ad">
-          <div className="wt-head">
+        <div className="flex h-full flex-col bg-white">
+          <div className={HEAD}>
             <Avatar label={tile.brand} />
-            <span><b>{tile.brand}</b><small>Sponsored</small></span>
-            <DotsThreeIcon className="wt-more" />
+            <span className="flex flex-col">
+              <b>{tile.brand}</b>
+              <small className="text-[3.2cqw] text-[#6b6b75]">Sponsored</small>
+            </span>
+            <DotsThreeIcon className={MORE} />
           </div>
-          <p className="wt-copy">{tile.text}</p>
-          <img src={tile.image} alt="" />
-          <div className="wt-cta"><span>{tile.brand}</span><b>{tile.cta}</b></div>
-        </div>
-      );
-
-    case "insta":
-      return (
-        <div className="wt-insta">
-          <div className="wt-head"><span className="wt-ring"><Avatar label={tile.handle} /></span><b>{tile.handle}</b><DotsThreeIcon className="wt-more" /></div>
-          <img src={tile.image} alt="" />
-          <div className="wt-actions"><HeartIcon weight="fill" /><ChatCircleIcon /><PaperPlaneTiltIcon /></div>
-          <small className="wt-likes">{tile.likes} likes</small>
-        </div>
-      );
-
-    case "phone":
-      return (
-        <div className="wt-phone">
-          <div className="wt-screen">
-            <img src={tile.image} alt="" />
-            <span className="wt-bars"><i /><i /><i /></span>
-            <span className="wt-caption">{tile.caption}</span>
+          <p className="m-0 px-[4cqw] pb-[3cqw] text-[3.8cqw] leading-[1.35]">{tile.text}</p>
+          <img src={tile.image} alt="" className={GROW_IMG} />
+          <div className="flex items-center justify-between bg-[#f0f2f5] px-[4cqw] py-[3.5cqw] text-[3.6cqw]">
+            <span>{tile.brand}</span>
+            <b className="rounded-[1.5cqw] bg-[#0866ff] px-[3.5cqw] py-[2cqw] text-white">{tile.cta}</b>
           </div>
         </div>
       );
 
-    case "site":
+    case "insta": // Instagram post
       return (
-        <div className={`wt-site${tile.theme === "dark" ? " is-dark" : ""}`}>
-          <div className="wt-browser"><i /><i /><i /></div>
-          <div className="wt-site-nav"><b>{tile.brand}</b><span /><span /><span /></div>
-          <h4>{tile.title}</h4>
-          <span className="wt-site-btn">{tile.cta}</span>
-          <img src={tile.image} alt="" />
+        <div className="flex h-full flex-col bg-white">
+          <div className={HEAD}>
+            <span className="rounded-full bg-[linear-gradient(45deg,#feda75,#d62976,#4f5bd5)] p-[0.8cqw]">
+              <Avatar label={tile.handle} />
+            </span>
+            <b>{tile.handle}</b>
+            <DotsThreeIcon className={MORE} />
+          </div>
+          <img src={tile.image} alt="" className={GROW_IMG} />
+          <div className="flex gap-[4cqw] px-[4cqw] pt-[3cqw] pb-[1cqw] text-[7cqw]">
+            <HeartIcon weight="fill" className="text-[#ed4956]" />
+            <ChatCircleIcon />
+            <PaperPlaneTiltIcon />
+          </div>
+          <small className="px-[4cqw] pb-[3.5cqw] text-[3.6cqw] font-semibold">{tile.likes} likes</small>
         </div>
       );
 
-    case "dashboard":
+    case "phone": // Phone story
       return (
-        <div className={`wt-dash is-${tile.theme || "dark"}`}>
-          <small>{tile.title}</small>
-          <strong>{tile.value}</strong>
-          <span className="wt-dash-label">{tile.label} <em>{tile.change}</em></span>
-          <svg viewBox="0 0 100 40" preserveAspectRatio="none">
-            <path d="M0 34 L12 30 L22 32 L34 22 L46 25 L58 15 L70 18 L82 8 L100 4 L100 40 L0 40 Z" className="wt-area" />
-            <path d="M0 34 L12 30 L22 32 L34 22 L46 25 L58 15 L70 18 L82 8 L100 4" className="wt-line" />
+        <div className="grid h-full place-items-center bg-[linear-gradient(160deg,#1d1d24,#0b0b0f)]">
+          <div className="relative h-[86%] w-[52%] overflow-hidden rounded-[7cqw] border-[2cqw] border-black shadow-[0_4cqw_10cqw_rgba(0,0,0,0.5),0_0_0_0.6cqw_#3a3a44]">
+            <img src={tile.image} alt="" className={FILL} />
+            <span className="absolute inset-x-[3cqw] top-[3cqw] flex gap-[1cqw]">
+              <i className="h-[0.7cqw] flex-1 rounded-[1cqw] bg-white/85" />
+              <i className="h-[0.7cqw] flex-1 rounded-[1cqw] bg-white/40" />
+              <i className="h-[0.7cqw] flex-1 rounded-[1cqw] bg-white/40" />
+            </span>
+            <span className="absolute bottom-[6cqw] left-1/2 -translate-x-1/2 whitespace-nowrap rounded-[2cqw] bg-white px-[3cqw] py-[1.5cqw] text-[3.6cqw] font-bold">
+              {tile.caption}
+            </span>
+          </div>
+        </div>
+      );
+
+    case "site": { // Landing page
+      const dark = tile.theme === "dark";
+      const bar = cn("h-[1.2cqw] w-[8cqw] rounded-[1cqw]", dark ? "bg-[#3a3a44]" : "bg-[#cfcabd]");
+      const dot = cn("size-[2.4cqw] rounded-full", dark ? "bg-[#3a3a44]" : "bg-[#c9c4b8]");
+      return (
+        <div className={cn("flex h-full flex-col", dark ? "bg-[#121217] text-white" : "bg-[#faf8f1]")}>
+          <div className={cn("flex gap-[1.5cqw] px-[4cqw] py-[3cqw]", dark ? "bg-[#1f1f26]" : "bg-[#e9e6dd]")}>
+            <i className={dot} /><i className={dot} /><i className={dot} />
+          </div>
+          <div className="flex items-center gap-[3cqw] px-[5cqw] py-[3.5cqw] text-[4cqw]">
+            <b>{tile.brand}</b>
+            <span className={cn(bar, "ml-auto")} /><span className={bar} /><span className={bar} />
+          </div>
+          <h4 className="mx-[5cqw] mt-[1cqw] mb-0 text-[7cqw] font-semibold leading-[1.1] tracking-[-0.04em]">{tile.title}</h4>
+          <span
+            className={cn(
+              "mx-[5cqw] my-[4cqw] self-start rounded-full px-[4cqw] py-[2.2cqw] text-[3.4cqw] font-semibold",
+              dark ? "bg-[#ffd400] text-[#171713]" : "bg-[#171713] text-[#ffd400]",
+            )}
+          >
+            {tile.cta}
+          </span>
+          <img src={tile.image} alt="" className="mx-[5cqw] block min-h-0 w-auto flex-1 rounded-t-[2cqw] object-cover" />
+        </div>
+      );
+    }
+
+    case "dashboard": { // Ads dashboard
+      const theme = DASH[tile.theme] || DASH.dark;
+      return (
+        <div className={cn("flex h-full flex-col p-[5cqw]", theme.box)}>
+          <small className="text-[3.6cqw] opacity-70">{tile.title}</small>
+          <strong className="mt-[3cqw] text-[15cqw] font-semibold leading-none tracking-[-0.05em]">{tile.value}</strong>
+          <span className="mt-[2cqw] text-[3.6cqw] opacity-80">
+            {tile.label} <em className={cn("ml-[2cqw] font-semibold not-italic", theme.up)}>{tile.change}</em>
+          </span>
+          <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="mt-auto h-[26%] w-full">
+            <path d="M0 34 L12 30 L22 32 L34 22 L46 25 L58 15 L70 18 L82 8 L100 4 L100 40 L0 40 Z" className={theme.area} />
+            <path
+              d="M0 34 L12 30 L22 32 L34 22 L46 25 L58 15 L70 18 L82 8 L100 4"
+              className={cn("fill-none stroke-[1.5] [vector-effect:non-scaling-stroke]", theme.line)}
+            />
           </svg>
-          <div className="wt-bars-row">{[40, 62, 48, 75, 58, 90, 70].map((h, i) => <i key={i} style={{ height: `${h}%` }} />)}</div>
+          <div className="mt-[4cqw] flex h-[14%] items-end gap-[2cqw]">
+            {[40, 62, 48, 75, 58, 90, 70].map((h, i) => (
+              <i key={i} className="flex-1 rounded-[1cqw] bg-current opacity-25" style={{ height: `${h}%` }} />
+            ))}
+          </div>
         </div>
       );
+    }
 
-    case "chat":
+    case "chat": // WhatsApp chat
       return (
-        <div className="wt-chat">
-          <div className="wt-chat-head"><Avatar label={tile.name} /><b>{tile.name}</b></div>
-          <div className="wt-chat-body">
-            {tile.messages.map((m, i) => <p key={i} className={i % 2 ? "is-out" : ""}>{m}</p>)}
+        <div className="flex h-full flex-col bg-[#efeae2]">
+          <div className="flex items-center gap-[3cqw] bg-[#075e54] px-[4cqw] py-[3.5cqw] text-[4cqw] text-white">
+            <Avatar label={tile.name} />
+            <b>{tile.name}</b>
+          </div>
+          <div className="flex flex-col gap-[3cqw] px-[4cqw] py-[5cqw]">
+            {tile.messages.map((m, i) => (
+              <p
+                key={i}
+                className={cn(
+                  "m-0 max-w-[80%] rounded-[3cqw] bg-white px-[3.5cqw] py-[2.5cqw] text-[3.8cqw] leading-[1.35]",
+                  i % 2 && "self-end bg-[#d9fdd3]",
+                )}
+              >
+                {m}
+              </p>
+            ))}
           </div>
         </div>
       );
 
-    case "search":
+    case "search": // Google search ad
       return (
-        <div className="wt-search">
-          <div className="wt-search-bar"><span /></div>
-          <small><b>Sponsored</b> · {tile.domain}</small>
-          <h4>{tile.headline}</h4>
-          <p>{tile.text}</p>
-          <div className="wt-search-links"><span>Shop now</span><span>New arrivals</span></div>
-          <span className="wt-skeleton" /><span className="wt-skeleton is-short" />
+        <div className="flex h-full flex-col gap-[2cqw] bg-white p-[5cqw]">
+          <div className="mb-[3cqw] h-[9cqw] rounded-full shadow-[0_0.5cqw_2cqw_rgba(0,0,0,0.15)]"><span /></div>
+          <small className="text-[3.2cqw] text-[#202124]"><b>Sponsored</b> · {tile.domain}</small>
+          <h4 className="m-0 text-[5.6cqw] font-medium leading-[1.2] text-[#1a0dab]">{tile.headline}</h4>
+          <p className="m-0 text-[3.6cqw] leading-[1.4] text-[#4d5156]">{tile.text}</p>
+          <div className="flex gap-[4cqw] text-[3.4cqw] text-[#1a0dab]"><span>Shop now</span><span>New arrivals</span></div>
+          <span className="mt-[3cqw] h-[2cqw] rounded-[1cqw] bg-[#ececef]" />
+          <span className="h-[2cqw] w-[60%] rounded-[1cqw] bg-[#ececef]" />
         </div>
       );
 
-    case "stat":
+    case "stat": // Result card
       return (
-        <div className={`wt-stat is-${tile.theme || "light"}`}>
-          <span className="wt-tag">{tile.tag}</span>
-          <strong>{tile.stat}</strong>
-          <span>{tile.label}</span>
+        <div className={cn("flex h-full flex-col justify-between p-[5cqw]", STAT[tile.theme] || STAT.light)}>
+          <span className="self-start rounded-full border-[0.4cqw] border-current px-[3cqw] py-[1cqw] font-home-mono text-[3cqw] font-medium uppercase leading-[1.4]">
+            {tile.tag}
+          </span>
+          <strong className="text-[17cqw] font-semibold leading-none tracking-[-0.06em]">{tile.stat}</strong>
+          <span className="text-[4cqw] leading-[1.3]">{tile.label}</span>
         </div>
       );
 
     default: // photo
-      return <img className="wt-fill" src={tile.image} alt="" decoding="async" />;
+      return <img className={FILL} src={tile.image} alt="" decoding="async" />;
   }
 };
 
+// Walls fade out towards the centre (mask), and grow from their outer edge when zooming
+const WALL = {
+  left: "origin-left [mask-image:linear-gradient(to_right,#000_var(--wall-solid),transparent_var(--wall-edge))]",
+  right: "origin-right [mask-image:linear-gradient(to_left,#000_var(--wall-solid),transparent_var(--wall-edge))]",
+};
+
 const Wall = ({ side }) => (
-  <div className={`hero-wall is-${side}`}>
-    <div className="hero-scene">
+  <div data-hero-wall={side} className={cn("absolute inset-0 [perspective-origin:50%_50%]", WALL[side])}>
+    <div className="absolute top-1/2 left-1/2 size-0 transform-3d">
       {Array.from({ length: COLUMNS_PER_SIDE }, (_, c) => {
         const column = side === "left" ? c : c + COLUMNS_PER_SIDE;
         return columnTiles(column).map((tile, i) => (
-          <div key={`${c}-${i}`} className="hero-tile" data-col={c} data-i={i}>
+          <div
+            key={`${c}-${i}`}
+            data-hero-tile
+            data-col={c}
+            data-i={i}
+            // Size and transform are set inline by useTunnel()
+            className="@container absolute top-0 left-0 overflow-hidden bg-[#ececef] font-sans text-[#111] backface-hidden will-change-transform"
+          >
             <TileBody tile={tile} />
           </div>
         ));
@@ -166,17 +269,16 @@ const Wall = ({ side }) => (
 const useTunnel = (sectionRef) => {
   useEffect(() => {
     const section = sectionRef.current;
-    const walls = Array.from(section.querySelectorAll(".hero-wall"));
+    const walls = Array.from(section.querySelectorAll("[data-hero-wall]"));
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let geo = null;
 
     const measure = () => {
       const U = section.clientWidth / 2;
       const H = section.clientHeight;
-      const kBase = parseFloat(getComputedStyle(section).getPropertyValue("--hero-k")) || 1.6;
       const aMax = A_START + A_STEP * COLUMNS_PER_SIDE;
       // Stretch the tube vertically; on tall screens enough that its "ceiling" stays off-screen.
-      const k = Math.max(kBase, (1.15 * (H / 2) * aMax) / U);
+      const k = Math.max(K_BASE, (1.15 * (H / 2) * aMax) / U);
 
       // Arc-length table for the ellipse (x = U cos t, y = kU sin t), t in [-90deg, 90deg]
       const STEPS = 720;
@@ -208,7 +310,7 @@ const useTunnel = (sectionRef) => {
 
       walls.forEach((wall) => {
         wall.style.perspective = `${U}px`;
-        wall.querySelectorAll(".hero-tile").forEach((el) => {
+        wall.querySelectorAll("[data-hero-tile]").forEach((el) => {
           const col = columns[el.dataset.col];
           const h = col.heights[el.dataset.i];
           el.style.width = `${w}px`;
@@ -222,8 +324,8 @@ const useTunnel = (sectionRef) => {
       geo = { U, k, ts, ss, sLimit, columns, offsets: prev?.offsets || columns.map((c, i) => (i * 0.37 * c.loop) % c.loop) };
       // tile lists per wall for the frame loop
       geo.tiles = walls.map((wall) => ({
-        right: wall.classList.contains("is-right"),
-        items: Array.from(wall.querySelectorAll(".hero-tile")).map((el) => ({ el, c: +el.dataset.col, i: +el.dataset.i, hidden: false })),
+        right: wall.dataset.heroWall === "right",
+        items: Array.from(wall.querySelectorAll("[data-hero-tile]")).map((el) => ({ el, c: +el.dataset.col, i: +el.dataset.i, hidden: false })),
       }));
     };
 
@@ -303,8 +405,8 @@ const useTunnel = (sectionRef) => {
 const useWallMotion = (sectionRef) => {
   useGSAP(() => {
     const section = sectionRef.current;
-    const gallery = section.querySelector(".hero-gallery");
-    const walls = gallery.querySelectorAll(".hero-wall");
+    const gallery = section.querySelector("[data-hero-gallery]");
+    const walls = gallery.querySelectorAll("[data-hero-wall]");
     const media = gsap.matchMedia();
 
     media.add("(prefers-reduced-motion: no-preference)", () => {
@@ -317,7 +419,8 @@ const useWallMotion = (sectionRef) => {
         ease: "power2.out",
       });
 
-      // The headline follows normal page flow. Only the gallery lingers and enlarges.
+      // The headline follows normal page flow. Only the gallery lingers and enlarges
+      // (zoom amount per screen size comes from --wall-zoom on the section).
       gsap.timeline({
         scrollTrigger: {
           trigger: section,
@@ -333,19 +436,14 @@ const useWallMotion = (sectionRef) => {
           scale: () => Number(getComputedStyle(section).getPropertyValue("--wall-zoom")),
           ease: "power2.in",
         }, 0);
-
-      const observer = new IntersectionObserver(([entry]) => {
-        gallery.classList.toggle("is-visible", entry.isIntersecting);
-      });
-      observer.observe(gallery);
-      return () => {
-        observer.disconnect();
-        gallery.classList.remove("is-visible");
-      };
     });
     return () => media.revert();
   }, { scope: sectionRef });
 };
+
+const HERO_BTN =
+  "inline-flex min-h-[58px] items-center gap-3 rounded-full px-8 text-[18px] font-medium tracking-[-0.01em] max-sm:min-h-[52px] max-sm:px-6 max-sm:text-base";
+const LIFT = { "data-hover": "", ...hoverTo({ y: -2, duration: 0.25 }) };
 
 /* ---------- Hero ---------- */
 export const Hero = () => {
@@ -354,56 +452,97 @@ export const Hero = () => {
   useTunnel(sectionRef);
 
   return (
-    <section className="hero" aria-labelledby="hero-heading" ref={sectionRef}>
-      <div className="hero-gallery" aria-hidden="true">
+    <section
+      ref={sectionRef}
+      aria-labelledby="hero-heading"
+      className={cn(
+        "relative isolate z-[1] grid min-h-svh place-items-center bg-[linear-gradient(to_bottom,#fff_88%,var(--color-home-paper))] text-[#3d3b52]",
+        // Wall mask (solid until, faded by) and scroll zoom, per screen size
+        "[--wall-edge:21.5%] [--wall-solid:17%] [--wall-zoom:1.85]",
+        "max-lg:[--wall-edge:17%] max-lg:[--wall-solid:10%] max-lg:[--wall-zoom:1.55]",
+        "max-sm:[--wall-edge:14%] max-sm:[--wall-solid:4%] max-sm:[--wall-zoom:1.25]",
+      )}
+    >
+      <div
+        data-hero-gallery
+        className="pointer-events-none absolute inset-0 z-[-1] overflow-hidden [mask-image:linear-gradient(to_bottom,#000_89%,transparent)]"
+        aria-hidden="true"
+      >
         <Wall side="left" />
         <Wall side="right" />
       </div>
 
-      <div className="hero-content">
-        <div className="hero-avatar" data-animate="scale-in" data-start="top bottom">
+      <div className="flex max-w-[900px] flex-col items-center px-6 pt-[110px] pb-[60px] text-center max-sm:max-w-full max-sm:px-7 max-sm:pt-[120px] max-sm:pb-16">
+        <div
+          className="grid size-[90px] place-items-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_35%_30%,#3a3a33,#111_70%)] max-sm:size-[78px]"
+          data-animate="scale-in"
+          data-start="top bottom"
+        >
           {HERO.avatar ? (
-            <img src={HERO.avatar} alt="" width="96" height="96" />
+            <img src={HERO.avatar} alt="" width="96" height="96" className="size-full object-cover" />
           ) : (
-            <img src="/svgs/icon.svg" alt="" width="44" height="44" className="hero-avatar-mark" />
+            <img src="/svgs/icon.svg" alt="" width="44" height="44" className="size-[46%] object-contain" />
           )}
         </div>
 
-        <div className="hero-meta" data-animate="fade-up" data-start="top bottom" data-delay="0.1">
-          <span className="hero-name">{HERO.name}</span>
-          <span className="hero-status">
-            <span className="hero-status-dot" aria-hidden="true" />
+        <div className="mt-[26px] flex flex-wrap items-center justify-center gap-3.5" data-animate="fade-up" data-start="top bottom" data-delay="0.1">
+          <span className="text-[21px] tracking-[-0.01em] text-[#4a4858] max-sm:text-[18px]">{HERO.name}</span>
+          <span className="inline-flex items-center gap-[9px] rounded-full bg-[#f1f1f4] py-1.5 pr-4 pl-[11px] font-home-mono text-sm font-medium leading-[1.4] text-[#4a4858] max-sm:text-xs">
+            <span className="size-[13px] rounded-full border-[2.5px] border-[#c4efd2] bg-[#22c55e] bg-clip-padding" aria-hidden="true" />
             {HERO.status}
           </span>
         </div>
 
-        <h1 id="hero-heading" className="hero-title" data-animate="words" data-start="top bottom" aria-label={LINES.join(" ")}>
+        <h1
+          id="hero-heading"
+          className="mt-[18px] mb-0 text-[clamp(44px,4.25vw,88px)] font-normal leading-[1.08] tracking-[-0.045em] text-[#3d3b52]"
+          data-animate="words"
+          data-start="top bottom"
+          aria-label={LINES.join(" ")}
+        >
           {LINES.map((line, i) => (
             <span key={i} aria-hidden="true" className="block">
-              {line.split(" ").map((word, j) => (
-                <span key={j} className="inline-block overflow-hidden pb-[0.08em] align-bottom">
-                  <span className="word-inner inline-block">
-                    {word}
-                    {" "}
+              {/* The space sits between the word boxes: trailing spaces inside an inline-block collapse */}
+              {line.split(" ").map((word, j, words) => (
+                <Fragment key={j}>
+                  <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
+                    <span className="word-inner inline-block">{word}</span>
                   </span>
-                </span>
+                  {j < words.length - 1 && " "}
+                </Fragment>
               ))}
             </span>
           ))}
         </h1>
 
-        <div className="hero-actions" data-animate="fade-up" data-start="top bottom" data-delay="0.4">
-          <Link to="/#contact" onClick={contactClick({ intent: "call" })} className="hero-btn is-dark">
-            <VideoCameraIcon size={22} weight="fill" className="hero-btn-icon" aria-hidden="true" />
+        <div className="mt-11 flex flex-wrap justify-center gap-4" data-animate="fade-up" data-start="top bottom" data-delay="0.4">
+          <Link
+            to="/#contact"
+            onClick={contactClick({ intent: "call" })}
+            className={cn(
+              HERO_BTN,
+              "bg-[radial-gradient(120%_90%_at_50%_0%,#3a3a40_0%,#141416_55%,#0a0a0b_100%)] text-white shadow-[0_8px_20px_rgba(0,0,0,0.25),inset_0_1px_0_rgba(255,255,255,0.2),inset_0_-2px_6px_rgba(0,0,0,0.6)]",
+            )}
+            {...LIFT}
+          >
+            <VideoCameraIcon size={22} weight="fill" className="text-[#ffd400]" aria-hidden="true" />
             {HERO.primaryCta}
           </Link>
-          <Link to="/#contact" onClick={contactClick({ intent: "proposal" })} className="hero-btn is-light">
+          <Link
+            to="/#contact"
+            onClick={contactClick({ intent: "proposal" })}
+            className={cn(
+              HERO_BTN,
+              "border border-white bg-[linear-gradient(180deg,#f7f7f9,#ececf0)] text-[#3d3b52] shadow-[0_6px_16px_rgba(30,30,60,0.08),inset_0_1px_0_#fff]",
+            )}
+            {...LIFT}
+          >
             {HERO.secondaryCta}
-            <ArrowRightIcon size={20} aria-hidden="true" />
+            <ArrowRightIcon size={20} aria-hidden="true" {...hoverTo({ x: 4, duration: 0.25 })} />
           </Link>
         </div>
 
-        <p className="hero-since" data-animate="fade-in" data-start="top bottom" data-delay="0.6">
+        <p className="mt-4 font-home-mono text-[15px] font-medium leading-[1.4] text-[#2f2f36]" data-animate="fade-in" data-start="top bottom" data-delay="0.6">
           {HERO.since}
         </p>
       </div>

@@ -1,19 +1,17 @@
-﻿import { Fragment, useEffect, useState } from "react";
+﻿import { Fragment, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  ArrowUpRightIcon,
-  ListIcon,
-  VideoCameraIcon,
-} from "@phosphor-icons/react";
+import { gsap } from "gsap";
+import { useGSAP } from "@gsap/react";
+import { ArrowUpRightIcon, ListIcon, VideoCameraIcon } from "@phosphor-icons/react";
 import { Drawer } from "@turtle-ui/components";
 import { cn } from "@turtle-ui/utils";
 import { PillButton } from "@/components/common/PillButton";
 import { NAV_LINKS, ROUTES } from "@/constants/constants";
-import {
-  contactClick,
-  openContactModal,
-} from "@/components/contact/contactActions";
-import "./navbar.css";
+import { contactClick, openContactModal } from "@/components/contact/contactActions";
+import { hoverTo } from "@/hooks/useHoverMotion";
+
+gsap.registerPlugin(useGSAP);
+const REDUCED = "(prefers-reduced-motion: reduce)";
 
 const sectionId = (to) => (to.includes("#") ? to.split("#")[1] : null);
 
@@ -84,66 +82,120 @@ const useDockVisible = (enabled) => {
   return enabled ? reached : true;
 };
 
+// Shared sizes: the ghost "plates" row and the real row must match exactly.
+const SLOT = "rounded-full p-1.5 max-md:p-[5px]";
+const FOCUS = "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bee-yellow";
+const LOGO =
+  "grid size-[58px] place-items-center rounded-full bg-[radial-gradient(circle_at_50%_30%,#1d1d21_0%,#08080a_75%)] shadow-[inset_0_0_0_1px_rgba(255,255,255,0.07)] max-md:size-[52px]";
+const LINKS =
+  "flex h-[52px] items-center rounded-full bg-[linear-gradient(180deg,#222226_0%,#18181b_100%)] p-1 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.08),inset_0_1px_0_rgba(255,255,255,0.05)] max-md:h-12";
+const LINK =
+  "relative isolate inline-flex h-11 items-center whitespace-nowrap rounded-full px-4 text-[17px] font-medium tracking-[-0.01em] text-[#96969f] max-md:hidden";
+const DIVIDER = "h-5 w-px bg-white/13 max-md:hidden";
+const MENU =
+  "hidden h-11 items-center gap-2 rounded-full px-4 text-base font-medium text-white max-md:inline-flex max-md:h-10 max-md:px-3.5";
+// Glossy pill: dark fill (padding-box) inside a light gradient border (border-box)
+const CTA = cn(
+  "inline-flex h-[52px] items-center gap-2.5 whitespace-nowrap rounded-full border-[1.5px] border-transparent pl-[22px] pr-[26px] text-[18px] font-semibold tracking-[-0.01em] text-white",
+  "[background:radial-gradient(120%_130%_at_50%_0%,#2d2d33_0%,#131316_55%,#0a0a0c_100%)_padding-box,linear-gradient(120deg,rgba(255,255,255,0.55),rgba(255,255,255,0.1)_35%,rgba(255,255,255,0.08)_65%,rgba(255,255,255,0.5))_border-box]",
+  "shadow-[inset_0_1px_0_rgba(255,255,255,0.14),inset_0_-3px_8px_rgba(0,0,0,0.6)]",
+  "max-md:h-12 max-md:pl-4 max-md:pr-[18px] max-md:text-base",
+);
+
 /**
  * One row of the dock. Rendered twice: once as black "plates" that the goo filter melts
  * into a single shape, and once on top with the real links. Both use the same sizes,
  * so the plates always line up with the content.
  */
 const DockRow = ({ ghost = false, activeIndex, onMenu }) => {
+  const rowRef = useRef(null);
+  const firstRun = useRef(true);
   const Item = ghost ? "span" : Link;
   const itemProps = (props) => (ghost ? {} : props);
+  const slot = cn(SLOT, ghost && "bg-[#0c0c0e] [&>*]:invisible");
+
+  // Active link: its pill fades/grows in, and the dividers beside it fade out.
+  useGSAP(
+    () => {
+      if (ghost) return;
+      const instant = firstRun.current || window.matchMedia(REDUCED).matches;
+      firstRun.current = false;
+      const q = gsap.utils.selector(rowRef);
+      gsap.to(q("[data-divider]"), {
+        opacity: (_, el) => (el.dataset.divider === "show" ? 1 : 0),
+        duration: instant ? 0 : 0.25,
+        overwrite: true,
+      });
+      if (!instant) {
+        gsap.fromTo(
+          q("[data-active-bg]"),
+          { autoAlpha: 0, scale: 0.9 },
+          { autoAlpha: 1, scale: 1, duration: 0.3, ease: "power2.out" },
+        );
+      }
+    },
+    { scope: rowRef, dependencies: [activeIndex, ghost] },
+  );
 
   return (
     <div
-      className={cn("dock-row", ghost && "is-plates")}
+      ref={rowRef}
+      className={cn(
+        "relative z-[1] flex items-center gap-1.5 [grid-area:1/1]",
+        ghost && "pointer-events-none z-0 [filter:url(#dock-goo)_drop-shadow(0_12px_24px_rgba(10,10,20,0.28))]",
+      )}
       aria-hidden={ghost || undefined}
     >
-      <div className="dock-slot is-round">
+      <div className={slot}>
         <Item
-          {...itemProps({ to: ROUTES.HOME, "aria-label": "Skalebee home" })}
-          className="dock-logo"
+          {...itemProps({
+            to: ROUTES.HOME,
+            "aria-label": "Skalebee home",
+            "data-hover": "",
+            ...hoverTo({ rotate: -12, scale: 1.04, duration: 0.3 }),
+          })}
+          className={cn(LOGO, FOCUS)}
         >
-          <img src="/svgs/icon.svg" alt="" width="100" height="100" />
+          <img src="/svgs/icon.svg" alt="" width="100" height="100" className="size-[34px] max-md:size-[30px]" />
         </Item>
       </div>
 
-      <div className="dock-slot">
-        <div className="dock-links">
+      <div className={slot}>
+        <div className={LINKS}>
           {NAV_LINKS.map((item, i) => {
             const isActive = i === activeIndex;
-            const showDivider =
-              i > 0 && i !== activeIndex && i - 1 !== activeIndex;
+            const showDivider = i !== activeIndex && i - 1 !== activeIndex;
             return (
               <Fragment key={item.to}>
-                {i > 0 && (
-                  <span
-                    className={cn("dock-divider", !showDivider && "is-hidden")}
-                  />
-                )}
+                {i > 0 && <span className={DIVIDER} data-divider={showDivider ? "show" : "hide"} />}
                 <Item
                   {...itemProps({
                     to: item.to,
                     "aria-current": isActive ? "location" : undefined,
+                    "data-hover": "",
+                    ...hoverTo({ color: "#ffffff", duration: 0.25 }),
                   })}
-                  className={cn("dock-link", isActive && "is-active")}
+                  className={cn(LINK, FOCUS, isActive && "text-white")}
                 >
+                  {isActive && (
+                    <span
+                      data-active-bg
+                      aria-hidden="true"
+                      className="absolute inset-0 -z-10 rounded-full bg-[linear-gradient(180deg,#3a3a40_0%,#2b2b30_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.1),0_2px_6px_rgba(0,0,0,0.35)]"
+                    />
+                  )}
                   {item.label}
                 </Item>
               </Fragment>
             );
           })}
           {ghost ? (
-            <span className="dock-menu">
+            <span className={MENU}>
               <ListIcon size={20} weight="bold" />
               Menu
             </span>
           ) : (
-            <button
-              type="button"
-              className="dock-menu"
-              aria-label="Open navigation menu"
-              onClick={onMenu}
-            >
+            <button type="button" className={cn(MENU, FOCUS)} aria-label="Open navigation menu" onClick={onMenu}>
               <ListIcon size={20} weight="bold" aria-hidden="true" />
               Menu
             </button>
@@ -151,19 +203,22 @@ const DockRow = ({ ghost = false, activeIndex, onMenu }) => {
         </div>
       </div>
 
-      <div className="dock-slot">
+      <div className={slot}>
         <Item
           {...itemProps({
             to: "/#contact",
             onClick: contactClick({ intent: "call" }),
+            "data-hover": "",
+            ...hoverTo({ y: -1, duration: 0.25 }),
           })}
-          className="dock-cta"
+          className={cn(CTA, FOCUS)}
         >
           <VideoCameraIcon
             size={24}
             weight="fill"
-            className="dock-cta-icon"
+            className="text-[#ffc93c]"
             aria-hidden="true"
+            {...(ghost ? {} : hoverTo({ scale: 1.12, rotate: -6, duration: 0.25 }))}
           />
           Book a call
         </Item>
@@ -182,71 +237,103 @@ export const Navbar = () => {
   const activeIndex = NAV_LINKS.findIndex((l) =>
     activeSection ? sectionId(l.to) === activeSection : l.to === pathname,
   );
+  const revealRef = useRef(null);
+  const dockRef = useRef(null);
+  const settled = useRef(false);
+
+  // Entrance: the dock rises in once, on first load.
+  useGSAP(() => {
+    if (window.matchMedia(REDUCED).matches) return;
+    gsap.from(dockRef.current, { yPercent: 140, autoAlpha: 0, duration: 0.8, delay: 0.2, ease: "power3.out" });
+  });
+
+  // Hide over the home hero, slide back in at the Platforms section. autoAlpha also takes
+  // the hidden dock out of keyboard reach. The first state is set without animating.
+  useGSAP(
+    () => {
+      const reduced = window.matchMedia(REDUCED).matches;
+      const first = !settled.current;
+      settled.current = true;
+      if (isVisible) {
+        gsap.to(revealRef.current, {
+          yPercent: 0,
+          autoAlpha: 1,
+          duration: first || reduced ? 0 : 0.55,
+          ease: "power3.out",
+          overwrite: true,
+        });
+      } else {
+        gsap.to(revealRef.current, {
+          yPercent: reduced ? 0 : 160,
+          autoAlpha: 0,
+          duration: first ? 0 : reduced ? 0.2 : 0.45,
+          ease: "power2.in",
+          overwrite: true,
+        });
+      }
+    },
+    { dependencies: [isVisible] },
+  );
 
   return (
-    <header className="dock-wrap">
+    <header className="pointer-events-none fixed inset-x-0 bottom-[18px] z-50 flex justify-center px-2.5 max-md:bottom-3">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-50 focus:rounded focus:bg-bee-yellow focus:p-4 focus:text-black"
+        className="pointer-events-auto sr-only focus:not-sr-only focus:fixed focus:left-6 focus:top-6 focus:z-50 focus:rounded focus:bg-bee-yellow focus:p-4 focus:text-black"
       >
         Skip to content
       </a>
 
       {/* Goo filter: blur + sharpen alpha, so the plates flow into each other with soft necks */}
-      <svg
-        width="0"
-        height="0"
-        className="absolute"
-        aria-hidden="true"
-        focusable="false"
-      >
+      <svg width="0" height="0" className="absolute" aria-hidden="true" focusable="false">
         <filter id="dock-goo" x="-20%" y="-60%" width="140%" height="220%">
           <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="blur" />
-          <feColorMatrix
-            in="blur"
-            values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10"
-          />
+          <feColorMatrix in="blur" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10" />
         </filter>
       </svg>
 
-      <div className={cn("dock-reveal", !isVisible && "is-hidden")}>
-        <nav aria-label="Main navigation" className="dock">
+      <div ref={revealRef}>
+        <nav ref={dockRef} aria-label="Main navigation" className="pointer-events-auto grid">
           <DockRow ghost activeIndex={activeIndex} />
           <DockRow activeIndex={activeIndex} onMenu={() => setIsMenuOpen(true)} />
         </nav>
       </div>
 
-      <Drawer isOpen={isMenuOpen} onToggle={setIsMenuOpen}>
-        <Drawer.Header head="Explore Skalebee" onClose={closeMenu} />
-        <Drawer.Body>
-          <nav aria-label="Mobile navigation" className="flex flex-col gap-2">
-            {NAV_LINKS.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                onClick={closeMenu}
-                className="flex items-center justify-between rounded px-3 py-4 text-2xl text-black hover:bg-bee-yellow"
-              >
-                {item.label}
-                <ArrowUpRightIcon size={24} />
-              </Link>
-            ))}
-          </nav>
-        </Drawer.Body>
-        <Drawer.Footer>
-          <PillButton
-            to="/#contact"
-            onClick={(e) => {
-              e.preventDefault();
-              closeMenu();
-              setTimeout(() => openContactModal({ intent: "general" }), 250);
-            }}
-            block
-          >
-            Start a conversation
-          </PillButton>
-        </Drawer.Footer>
-      </Drawer>
+      <div className="pointer-events-auto">
+        <Drawer isOpen={isMenuOpen} onToggle={setIsMenuOpen}>
+          <Drawer.Header head="Explore Skalebee" onClose={closeMenu} />
+          <Drawer.Body>
+            <nav aria-label="Mobile navigation" className="flex flex-col gap-2">
+              {NAV_LINKS.map((item) => (
+                <Link
+                  key={item.to}
+                  to={item.to}
+                  onClick={closeMenu}
+                  data-hover=""
+                  {...hoverTo({ backgroundColor: "#ffd400", duration: 0.2 })}
+                  className="flex items-center justify-between rounded px-3 py-4 text-2xl text-black"
+                >
+                  {item.label}
+                  <ArrowUpRightIcon size={24} />
+                </Link>
+              ))}
+            </nav>
+          </Drawer.Body>
+          <Drawer.Footer>
+            <PillButton
+              to="/#contact"
+              onClick={(e) => {
+                e.preventDefault();
+                closeMenu();
+                setTimeout(() => openContactModal({ intent: "general" }), 250);
+              }}
+              block
+            >
+              Start a conversation
+            </PillButton>
+          </Drawer.Footer>
+        </Drawer>
+      </div>
     </header>
   );
 };
