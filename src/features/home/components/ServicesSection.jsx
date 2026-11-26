@@ -15,94 +15,124 @@ const MOTION = "(prefers-reduced-motion: reduce)";
 const TICKS = Array.from({ length: 12 }, (_, i) => i);
 const reduced = () => window.matchMedia(MOTION).matches;
 
-// Step label, open (selected) and closed. GSAP plays the change between them.
-const LABEL_OPEN = { gridTemplateColumns: "1fr", paddingLeft: 8, paddingRight: 9, opacity: 1, filter: "blur(0px)" };
-const LABEL_SHUT = { gridTemplateColumns: "0fr", paddingLeft: 0, paddingRight: 0, opacity: 0, filter: "blur(4px)" };
+// Edge positions sampled every 100 ms from the reference. The front arrives
+// around 600 ms, while the back of the capsule takes another second to settle.
+const front = gsap.utils.interpolate([0, .20, .62, .86, .96, .99, 1]);
+const back = gsap.utils.interpolate([0, .01, .12, .38, .62, .78, .86, .91, .94, .96, .975, .985, .992, .996, .998, 1]);
 
-// Track both ends of the pill independently as the selected tab expands.
-// The nearby ruler marks rise and settle as the pill passes them.
 function ServiceRuler({ active, select }) {
   const wrapRef = useRef(null);
   const railRef = useRef(null);
   const pillRef = useRef(null);
-  const edges = useRef(null);
-  const prevActive = useRef(active);
-
-  // The newly selected label opens (and blurs in) while the old one closes.
-  useGSAP(() => {
-    const from = prevActive.current;
-    prevActive.current = active;
-    if (from === active || reduced()) return;
-    const labels = railRef.current.querySelectorAll("[data-svc-label]");
-    const play = (el, start, end) =>
-      gsap.fromTo(el, start, { ...end, duration: 0.38, ease: "power1.inOut", clearProps: "gridTemplateColumns,paddingLeft,paddingRight,opacity,filter" });
-    play(labels[from], LABEL_OPEN, LABEL_SHUT);
-    play(labels[active], LABEL_SHUT, LABEL_OPEN);
-  }, { dependencies: [active] });
+  const neckRef = useRef(null);
+  const bridgeRef = useRef(null);
+  const captionRef = useRef(null);
+  const lastFrame = useRef(null);
 
   useLayoutEffect(() => {
     const rail = railRef.current;
     const wrap = wrapRef.current;
     const pill = pillRef.current;
-    const tab = rail.querySelector('[aria-selected="true"]');
-    const ticks = Array.from(rail.querySelectorAll("[data-svc-ticks] i"));
+    const neck = neckRef.current;
+    const caption = captionRef.current;
+    const tabs = Array.from(rail.querySelectorAll('[role="tab"]'));
     const motion = window.matchMedia(MOTION);
     let frame;
-    let lastTime;
-    let started;
 
-    const paint = (now) => {
-      const step = Math.min(50, now - (lastTime ?? now - 16)) / 1000;
-      lastTime = now;
-      started ??= now;
+    function start(animate) {
+      cancelAnimationFrame(frame);
       const origin = rail.getBoundingClientRect().left;
-      const rect = tab.getBoundingClientRect();
+      const rect = tabs[active].getBoundingClientRect();
       const left = rect.left - origin;
       const right = rect.right - origin;
-      if (!edges.current || motion.matches) edges.current = [left, right];
-      const [prevL, prevR] = edges.current;
-      const l = left + (prevL - left) * Math.exp(-step * (left < prevL ? 24 : 14));
-      const r = right + (prevR - right) * Math.exp(-step * (right > prevR ? 24 : 14));
-      edges.current = [l, r];
-      // Read the tick positions before writing any styles.
-      const positions = ticks.map((tick) => tick.getBoundingClientRect().left - origin);
-      pill.style.transform = `translateX(${l}px)`;
-      pill.style.width = `${r - l}px`;
-      ticks.forEach((tick, i) => {
-        const x = positions[i];
-        const distance = Math.max(l - x, x - r, 0);
-        // Ticks next to the pill grow a little and darken, fading out over ~30px.
-        const near = Math.exp(-distance / 26);
-        tick.style.transform = `scaleY(${1 + 0.7 * near})`;
-        tick.style.setProperty("--near", near.toFixed(3));
-        tick.classList.toggle("is-passed", x < l);
-      });
-      if (wrap.scrollWidth > wrap.clientWidth) {
-        wrap.scrollLeft = (l + r - wrap.clientWidth) / 2;
-      }
-      if (!motion.matches && (now - started < 480 || Math.abs(left - l) + Math.abs(right - r) > 0.3)) {
-        frame = requestAnimationFrame(paint);
-      }
-    };
+      const ticks = Array.from(rail.querySelectorAll("[data-svc-ticks] i"), (el) => ({
+        el, x: el.getBoundingClientRect().left - origin,
+      }));
+      const from = lastFrame.current;
+      const travel = animate && from && from.index !== active && !motion.matches;
+      const forward = !from || left >= from.left;
+      const station = tabs[from?.index ?? active].getBoundingClientRect().left - origin + 22;
+      const started = performance.now();
+      const changeLabel = !from || from.label !== active;
+      const viewportWidth = wrap.clientWidth;
+      const scrollable = wrap.scrollWidth > viewportWidth;
+      const svgGroup = pill.parentNode;
+      let captionWidth = caption.offsetWidth;
+      svgGroup.setAttribute("filter", travel ? "url(#svc-liquid)" : "none");
+      neck.setAttribute("cx", station);
 
-    const refresh = () => {
-      cancelAnimationFrame(frame);
-      started = undefined;
-      lastTime = undefined;
-      paint(performance.now());
-    };
-    refresh();
-    const resize = new ResizeObserver(refresh);
-    resize.observe(wrap);
-    resize.observe(tab);
+      function paint(now) {
+        const elapsed = travel ? Math.max(0, (now - started) / 1000) : 1.5;
+        const lead = front(Math.min(1, elapsed / .6));
+        const trail = back(Math.min(1, elapsed / 1.5));
+        const l = travel ? gsap.utils.interpolate(from.left, left, forward ? trail : lead) : left;
+        const r = travel ? gsap.utils.interpolate(from.right, right, forward ? lead : trail) : right;
+        const x = travel ? gsap.utils.interpolate(from.x, left, lead) : left;
+        const label = travel && elapsed < .30 ? from.label : active;
+        const fade = changeLabel && travel
+          ? gsap.utils.clamp(0, 1, elapsed < .30 ? (0.30 - elapsed) / .18 : (elapsed - .30) / .14)
+          : 1;
+        pill.setAttribute("x", l);
+        pill.setAttribute("width", r - l);
+        neck.setAttribute("r", travel && elapsed < .37 ? 15 : 0);
+        // The old dot stays attached by a thinning strand until the pill pulls free.
+        const side = station < l ? 1 : -1;
+        const edge = side === 1 ? l : r;
+        const gap = (edge - station) * side;
+        if (travel && elapsed < .32 && gap > 0 && gap < 110) {
+          const mid = (station + edge) / 2;
+          const tip = edge + side * 14;
+          const half = 5 * (1 - elapsed / .32);
+          bridgeRef.current.setAttribute("d",
+            `M ${station} 19 Q ${mid} ${31 - half} ${tip} 14 L ${tip} 48 Q ${mid} ${31 + half} ${station} 43 Z`);
+        } else {
+          bridgeRef.current.removeAttribute("d");
+        }
+        if (elapsed >= .42) svgGroup.removeAttribute("filter");
+
+        const [number, title] = caption.children;
+        if (caption.dataset.index !== String(label)) {
+          number.textContent = String(label + 1);
+          title.textContent = SERVICES[label].title;
+          caption.dataset.index = String(label);
+          captionWidth = caption.offsetWidth;
+        }
+        caption.style.transform = `translateX(${x}px)`;
+        caption.style.opacity = fade;
+        caption.style.filter = fade < 1 ? `blur(${(1 - fade) * 4}px)` : "";
+        // Keep the moving type inside the independently stretching edges.
+        caption.style.clipPath = `inset(0 ${Math.max(0, x + captionWidth - r)}px 0 ${Math.max(0, l - x)}px)`;
+        for (const { el, x: tickX } of ticks) {
+          const distance = Math.max(l - tickX, tickX - r, 0);
+          const near = Math.exp(-distance / 54);
+          el.style.transform = `scaleY(${1 + 1.55 * near})`;
+          el.style.backgroundColor = tickX < l ? "#43445c" : "#dcdee5";
+        }
+        if (scrollable) wrap.scrollTo({ left: (l + r - viewportWidth) / 2, behavior: "instant" });
+        lastFrame.current = { left: l, right: r, x, label, index: active };
+        if (elapsed < 1.5) frame = requestAnimationFrame(paint);
+      }
+      paint(started);
+    }
+
+    start(true);
+    const refresh = () => start(false);
+    const observer = new ResizeObserver((entries) => {
+      // The observer's initial delivery must not interrupt a new selection.
+      if (entries.some(({ target }) => target.clientWidth !== widths.get(target))) {
+        for (const { target } of entries) widths.set(target, target.clientWidth);
+        refresh();
+      }
+    });
+    const widths = new Map([wrap, ...tabs].map((el) => [el, el.clientWidth]));
+    widths.forEach((_, el) => observer.observe(el));
     motion.addEventListener("change", refresh);
     return () => {
-      resize.disconnect();
       cancelAnimationFrame(frame);
+      observer.disconnect();
       motion.removeEventListener("change", refresh);
     };
   }, [active]);
-
   const onKeyDown = (event, i) => {
     const next = { ArrowLeft: (i + LAST) % COUNT, ArrowRight: (i + 1) % COUNT, Home: 0, End: LAST }[event.key];
     if (next === undefined) return;
@@ -113,22 +143,37 @@ function ServiceRuler({ active, select }) {
 
   return (
     <div
-      className="mx-auto mt-[clamp(26px,6.2svh,62px)] w-[min(100%,1098px)] overflow-x-auto rounded-full bg-[#f8f8fa] [scrollbar-width:none] max-lg:mt-[34px] [&::-webkit-scrollbar]:hidden"
+      className="mx-auto mt-[clamp(26px,6.2svh,62px)] w-[min(100%,1098px)] overflow-x-auto rounded-full bg-[#f8f8fa] [overflow-anchor:none] [scrollbar-width:none] max-lg:mt-[34px] [&::-webkit-scrollbar]:hidden"
       ref={wrapRef}
       data-lenis-prevent-horizontal
     >
-      <div className="relative isolate flex w-full min-w-max items-center p-2" role="tablist" aria-label="Services" ref={railRef}>
-        {/* Black pill that stretches from step to step (above the ticks, below the steps) */}
+      <div className="relative isolate flex w-full min-w-[max(100%,720px)] items-center p-2" role="tablist" aria-label="Services" ref={railRef}>
+        <svg aria-hidden="true" className="pointer-events-none absolute inset-0 z-[2] size-full overflow-visible">
+          <defs>
+            <filter id="svc-liquid" x="-10%" y="-100%" width="120%" height="300%" colorInterpolationFilters="sRGB">
+              <feGaussianBlur stdDeviation="5" />
+              <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 22 -10.5" />
+            </filter>
+          </defs>
+          <g fill="#17171b">
+            <path ref={bridgeRef} />
+            <circle ref={neckRef} cy="31" r="0" />
+            <rect ref={pillRef} y="8" height="46" rx="23" />
+          </g>
+        </svg>
         <span
-          className="pointer-events-none absolute inset-y-2 left-0 z-[1] rounded-full bg-[linear-gradient(180deg,#232328_0%,#111114_100%)] shadow-[inset_0_1px_0_rgb(255_255_255/8%),0_4px_12px_rgb(20_20_30/18%)]"
-          ref={pillRef}
           aria-hidden="true"
-        />
+          ref={captionRef}
+          className="pointer-events-none absolute top-2 left-0 z-[3] flex h-[46px] items-center gap-2 whitespace-nowrap pr-4 pl-[7px] text-white"
+        >
+          <span className="grid size-[30px] place-items-center rounded-full bg-[#2a2a30] font-home-mono text-sm font-medium" />
+          <span className="text-[18px] font-semibold leading-none tracking-[-0.025em] max-tablet:text-base" />
+        </span>
         {SERVICES.map((service, i) => {
           const selected = active === i;
           const done = i < active;
           return (
-            <div className="flex items-center not-last:flex-[1_0_auto]" role="presentation" key={service.title}>
+            <div className="relative flex min-w-max items-center not-last:flex-[1_0_0px] not-last:pr-1" role="presentation" key={service.title}>
               <button
                 type="button"
                 role="tab"
@@ -137,7 +182,7 @@ function ServiceRuler({ active, select }) {
                 aria-label={service.title}
                 aria-selected={selected}
                 tabIndex={selected ? 0 : -1}
-                className="relative z-[2] flex h-[46px] flex-none items-center rounded-full border-0 bg-transparent px-[7px] text-svc-ink"
+                className="relative z-[1] flex h-[46px] flex-none items-center rounded-full border-0 bg-transparent px-[7px] text-svc-ink"
                 onClick={() => select(i)}
                 onKeyDown={(event) => onKeyDown(event, i)}
                 data-hover=""
@@ -152,27 +197,22 @@ function ServiceRuler({ active, select }) {
                 >
                   {i + 1}
                 </span>
-                <span
-                  data-svc-label
-                  className={cn(
-                    "grid text-[18px] font-semibold leading-none tracking-[-0.025em] max-tablet:text-base",
-                    selected ? "grid-cols-[1fr] pr-[9px] pl-2 text-white" : "grid-cols-[0fr] opacity-0 blur-[4px]",
-                  )}
-                >
-                  <span className="overflow-hidden whitespace-nowrap">{service.title}</span>
-                </span>
+                {selected && (
+                  <span aria-hidden="true" className="invisible pl-2 pr-[9px] whitespace-nowrap text-[18px] font-semibold leading-none tracking-[-0.025em] max-tablet:text-base">
+                    {service.title}
+                  </span>
+                )}
               </button>
               {i < LAST && (
                 <span
                   data-svc-ticks
-                  className="flex h-[42px] min-w-[45px] flex-[1_0_auto] items-center justify-evenly gap-[3px] max-lg:min-w-[52px]"
+                  className="pointer-events-none absolute inset-y-0 right-0 left-[50px] flex items-center gap-[14px] overflow-hidden"
                   aria-hidden="true"
                 >
-                  {/* --near (0 to 1) is set from JS: 1 right beside the pill, 0 far away */}
                   {TICKS.map((k) => (
                     <i
                       key={k}
-                      className="h-4 w-[1.5px] rounded-[1px] bg-[color-mix(in_srgb,#6f7084_calc(var(--near,0)*100%),var(--tick))] [--tick:#dcdde5] [&.is-passed]:[--tick:#b3b4c3]"
+                      className="h-[18px] w-px shrink-0 bg-[#dcdee5]"
                     />
                   ))}
                 </span>
