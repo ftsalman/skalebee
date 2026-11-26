@@ -10,11 +10,11 @@ import { LABEL, TITLE } from "./homeStyles";
 // Small mono label: [ SELECTED WORK ]
 export const SectionLabel = ({ children, light = false, className }) => (
   <p className={cn(LABEL, light && "text-[#bdbdb3]", className)}>
-    <span aria-hidden="true">[</span> {children} <span aria-hidden="true">]</span>
+    <span aria-hidden="true">[</span> <AnimatedText as="span">{children}</AnimatedText> <span aria-hidden="true">]</span>
   </p>
 );
 
-// Big section title, words slide up on scroll (useScrollAnimations)
+// Big section title, words sharpen in reading order
 export const SectionTitle = ({ children, className }) => (
   <AnimatedText text={children} className={cn(TITLE, className)} />
 );

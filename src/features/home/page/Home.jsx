@@ -1,10 +1,10 @@
 import { useRef } from "react";
 import useScrollAnimations from "@/hooks/useScrollAnimations";
+import { AboutSection } from "../components/AboutSection";
 import { Hero } from "../components/Hero";
 import {
   BrandStrip,
   FeaturedWork,
-  AboutSection,
   TestimonialsSection,
 } from "../components/HomeSections";
 import { FaqSection } from "../components/FaqSection";
@@ -42,6 +42,7 @@ export const Home = () => {
   return (
     <div ref={scopeRef} className={PAGE}>
       <Hero />
+      <AboutSection />
       {/* 1. Introduce */}
       <BrandStrip />
       <PlatformsOrbit />
@@ -53,7 +54,6 @@ export const Home = () => {
       {/* 4. Who we are */}
       <MetaSpecialistSection />
       {/* <CertificationsSection /> */}
-      <AboutSection />
       {/* 5. How we work */}
       <ProcessSection />
       <ReviewsSection />

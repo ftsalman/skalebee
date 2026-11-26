@@ -1,3 +1,4 @@
+import { AnimatedText } from "@/components/common/AnimatedText";
 import { useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -63,7 +64,7 @@ function ProcessStep({ step, index }) {
           <span className="min-w-0">
             <span className="flex flex-wrap items-baseline gap-x-4">
               <span className="text-2xl font-medium tracking-[-0.035em] max-sm:text-xl">
-                {step.title}
+                <AnimatedText as="span">{step.title}</AnimatedText>
               </span>
               <span className="text-xl tracking-[-0.02em] max-sm:text-base">
                 {step.focus}
@@ -105,8 +106,8 @@ function ProcessStep({ step, index }) {
               />
             )}
             <ul className="list-disc space-y-3.5 pl-5 text-[17px] leading-relaxed marker:text-svc-muted">
-              <li>{step.description}</li>
-              <li>{step.detail}</li>
+              <AnimatedText as="li">{step.description}</AnimatedText>
+              <AnimatedText as="li">{step.detail}</AnimatedText>
             </ul>
             <ul className="mt-5 flex flex-wrap gap-2.5">
               {step.tags.map((tag) => (
@@ -219,7 +220,7 @@ export function ProcessSection() {
       className="bg-[#f3f4f7] px-gutter py-[clamp(72px,8vw,144px)] text-svc-ink"
     >
       <div className="mx-auto max-w-[800px]">
-        <h2
+        <AnimatedText as="h2"
           id="process-heading"
           className="mb-16 text-[clamp(34px,4vw,48px)] font-normal leading-[1.16] tracking-[-0.055em] max-sm:mb-10"
         >
@@ -227,7 +228,7 @@ export function ProcessSection() {
           <span className="text-svc-muted">
             Your growth journey in eight simple steps.
           </span>
-        </h2>
+        </AnimatedText>
         <ol className="border-t border-[#e3e4eb]">
           {APPROACH.map((step, index) => (
             <ProcessStep key={step.title} step={step} index={index} />

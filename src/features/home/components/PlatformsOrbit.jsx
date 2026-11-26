@@ -134,13 +134,11 @@ export const PlatformsOrbit = () => {
             className="mt-[22px] mb-0 text-[clamp(38px,4.4vw,68px)] font-normal leading-[1.12] tracking-[-0.045em]"
           />
         </div>
-        <p
+        <AnimatedText as="p"
           className="mt-[22px] max-w-[660px] text-[clamp(16px,1.2vw,21px)] leading-normal text-[#3a3a34]"
-          data-animate="fade-up"
-          data-delay="0.15"
         >
           {PLATFORMS_SECTION.description}
-        </p>
+        </AnimatedText>
         <p className="sr-only">Platforms: {PLATFORMS.map((p) => p.name).join(", ")}.</p>
         <div data-animate="fade-up" data-delay="0.3">
           <PillButton to="/#contact" className="mt-[46px]">{PLATFORMS_SECTION.cta}</PillButton>

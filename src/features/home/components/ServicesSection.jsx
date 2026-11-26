@@ -1,3 +1,4 @@
+import { AnimatedText } from "@/components/common/AnimatedText";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -306,12 +307,12 @@ export const ServicesSection = () => {
         className="grid content-center bg-white px-5 pt-[86px] pb-16 text-svc-ink lg:min-h-svh lg:px-gutter lg:pt-[110px] lg:pb-7"
       >
         <div className="mx-auto w-[min(100%,1348px)] min-w-0">
-          <h2
+          <AnimatedText as="h2"
             id="services-heading"
             className="m-0 text-balance text-center text-[clamp(34px,2.7vw,50px)] font-normal leading-[1.1] tracking-[-0.055em] max-tablet:mx-auto max-tablet:max-w-[19ch]"
           >
             {COUNT} services <span className="text-svc-muted">{SERVICES_SECTION.muted}</span>
-          </h2>
+          </AnimatedText>
           <ServiceRuler active={active} select={select} />
           <div
             ref={cardRef}
@@ -333,12 +334,12 @@ export const ServicesSection = () => {
                 {active + 1}
               </span>
               <div>
-                <h3 data-svc-enter className="m-0 text-[clamp(22px,1.55vw,26px)] font-medium leading-[1.2] tracking-[-0.025em]">
+                <AnimatedText as="h3" className="m-0 text-[clamp(22px,1.55vw,26px)] font-medium leading-[1.2] tracking-[-0.025em]">
                   {service.title}
-                </h3>
-                <p data-svc-enter className="mt-4 mb-0 max-w-[37ch] text-[clamp(16px,1vw,18px)] leading-normal max-tablet:mt-[9px]">
+                </AnimatedText>
+                <AnimatedText as="p" className="mt-4 mb-0 max-w-[37ch] text-[clamp(16px,1vw,18px)] leading-normal max-tablet:mt-[9px]">
                   {service.description}
-                </p>
+                </AnimatedText>
               </div>
             </div>
             <div className="relative overflow-clip rounded-[20px] bg-[#e8eaf0] max-tablet:aspect-[1.57] max-tablet:rounded-2xl">

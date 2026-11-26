@@ -1,3 +1,4 @@
+import { AnimatedText } from "@/components/common/AnimatedText";
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -6,7 +7,6 @@ import {
   ArrowRightIcon,
   ArrowLeftIcon,
   XIcon,
-  CheckIcon,
 } from "@phosphor-icons/react";
 import { cn } from "@turtle-ui/utils";
 import { PillButton } from "@/components/common/PillButton";
@@ -15,9 +15,7 @@ import { hoverTo } from "@/hooks/useHoverMotion";
 import {
   CASE_STUDIES,
   FEATURED_WORK,
-  STATS,
   TESTIMONIALS,
-  WHY_US,
 } from "../constants/homeData";
 import { MUTED, SECTION, SECTION_HEADING } from "./homeStyles";
 import { SectionLabel, SectionTitle, TextLink } from "./homeUi";
@@ -145,11 +143,11 @@ const ProjectDialog = ({ project, onClose }) => {
       </div>
       <div className="p-[clamp(24px,5vw,48px)]">
         <SectionLabel>Client</SectionLabel>
-        <h2 id="project-dialog-title" className="mt-4 mb-[5px] text-[clamp(30px,5vw,52px)] font-normal tracking-[-0.05em]">
+        <AnimatedText as="h2" id="project-dialog-title" className="mt-4 mb-[5px] text-[clamp(30px,5vw,52px)] font-normal tracking-[-0.05em]">
           {project.client}
-        </h2>
-        <p className="text-sm leading-[1.7]">{project.category}</p>
-        {project.note && <p className={cn("text-sm leading-[1.7]", MUTED)}>{project.note}</p>}
+        </AnimatedText>
+        <AnimatedText as="p" className="text-sm leading-[1.7]">{project.category}</AnimatedText>
+        {project.note && <AnimatedText as="p" className={cn("text-sm leading-[1.7]", MUTED)}>{project.note}</AnimatedText>}
         <PillButton to="/#contact" onClick={onClose} className="mt-[25px]">
           Discuss a similar project
         </PillButton>
@@ -210,14 +208,14 @@ const WorkCard = ({ project, onOpen }) => {
       </span>
 
       <div className="pointer-events-none absolute inset-x-[var(--card-pad)] bottom-[var(--card-pad)] z-[2] flex items-end justify-between gap-5 max-md:flex-col max-md:items-start max-md:gap-3.5">
-        <h3
+        <AnimatedText as="h3"
           className={cn(
             "text-[clamp(26px,2.1vw,40px)] font-medium leading-none tracking-[-0.04em]",
             light ? "[text-shadow:none]" : "[text-shadow:0_2px_16px_rgba(0,0,0,0.18)]",
           )}
         >
           {project.client}
-        </h3>
+        </AnimatedText>
         <ul className="m-0 flex list-none flex-col items-end gap-2.5 p-0 max-md:flex-row max-md:flex-wrap max-md:items-start" aria-label="Services">
           {tags.map((tag) => (
             <li
@@ -296,101 +294,6 @@ export const FeaturedWork = () => {
 
 const LINE = "border-home-line";
 
-export const AboutSection = () => (
-  <section className={SECTION} id="about" aria-labelledby="about-heading">
-    <SectionLabel>About Skalebee</SectionLabel>
-    <div
-      className="grid grid-cols-[1.5fr_1fr] items-end gap-[12%] max-lg:gap-[7%] max-tablet:grid-cols-1 max-tablet:gap-[35px]"
-      id="about-heading"
-    >
-      <SectionTitle>A Meta-certified team for the UAE and India.</SectionTitle>
-      <p className="max-w-[330px] pb-1.5 text-[19px] leading-normal max-lg:text-base max-tablet:max-w-full max-tablet:text-[17px]">
-        {WHY_US.description}
-      </p>
-    </div>
-    <div
-      className={cn(
-        "mt-[68px] grid grid-cols-4 border-y py-[35px] max-tablet:mt-[35px] max-tablet:grid-cols-2 max-tablet:gap-y-[30px] max-tablet:py-7",
-        LINE,
-      )}
-      data-animate="stagger"
-    >
-      {STATS.map((stat) => (
-        <div
-          className={cn(
-            "flex flex-col gap-[15px] border-l px-[25px] first:border-l-0 first:pl-0 max-tablet:gap-3 max-tablet:px-[22px] max-tablet:first:pl-0 max-tablet:nth-3:border-l-0 max-tablet:nth-3:pl-0",
-            LINE,
-          )}
-          key={stat.label}
-        >
-          <strong className="text-[clamp(42px,5.9vw,86px)] font-normal leading-none tracking-[-0.07em] max-tablet:text-[57px]">
-            <span data-counter={stat.value} data-decimals={stat.decimals || 0}>
-              {stat.value}
-            </span>
-            {stat.suffix}
-          </strong>
-          <span className="text-xs text-[#67675e] max-tablet:text-[11px]">{stat.label}</span>
-        </div>
-      ))}
-    </div>
-    <div className="mt-[90px] grid grid-cols-[0.9fr_1fr] items-center gap-[11%] max-lg:gap-[6%] max-tablet:mt-[45px] max-tablet:grid-cols-1 max-tablet:gap-[35px]">
-      <div className="relative aspect-[0.88] overflow-hidden rounded-[7px] bg-[#d6d0c3] max-tablet:aspect-[0.95]" data-home-parallax-frame>
-        <img
-          src="/imgs/brand/shakkeer.webp"
-          alt="Hand-drawn portrait of Shakkeer, founder of Skalebee"
-          width="760"
-          height="971"
-          loading="lazy"
-          data-home-parallax
-          className="absolute -top-[8%] h-[116%] w-full object-cover object-[center_33%]"
-        />
-        <div className="absolute inset-x-[18px] bottom-[18px] flex items-center justify-between rounded bg-home-paper p-[17px] text-[13px]">
-          <span>Hi, I’m Shakkeer. Meta certified.</span>
-          <img src="/svgs/icon.svg" alt="" width="32" height="32" />
-        </div>
-      </div>
-      <div data-animate="fade-up">
-        <SectionLabel>{WHY_US.eyebrow}</SectionLabel>
-        <h3 className="my-[25px] text-[clamp(32px,3.4vw,50px)] font-normal leading-[1.1] tracking-[-0.055em] max-tablet:text-[38px]">
-          {WHY_US.title}
-        </h3>
-        <p className="my-[15px] text-[15px] leading-[1.8] text-[#66665c]">
-          Skalebee helps businesses get more customers online, and actually
-          close them. We are a brand of Sharaco Technologies Pvt Ltd, based in
-          Pattambi, Kerala, and working with businesses in Dubai, across the UAE
-          and throughout India.
-        </p>
-        <p className="my-[15px] text-[15px] leading-[1.8] text-[#66665c]">
-          Sales over vanity: likes and clicks are nice, but leads, bookings and
-          revenue are what we report on. You own your ad accounts and data, and
-          our fee and your ad budget are always shown separately.
-        </p>
-        <ul className={cn("my-[26px] border-t pt-[17px]", LINE)}>
-          {WHY_US.points.map((point) => (
-            <li key={point} className="flex items-start gap-3 py-2 text-[13px]">
-              <CheckIcon size={18} aria-hidden="true" className="shrink-0" />
-              {point}
-            </li>
-          ))}
-        </ul>
-        <PillButton to="/#contact" className="max-tablet:w-full">
-          Get a free growth audit
-        </PillButton>
-      </div>
-    </div>
-    <div className={cn("mt-[90px] border-t pt-[30px] max-tablet:mt-[45px]", LINE)}>
-      <SectionLabel>Where we make it happen</SectionLabel>
-      <div className="mt-8 flex flex-wrap items-center justify-between gap-[25px] max-tablet:justify-start max-tablet:gap-x-7 max-tablet:gap-y-[18px]">
-        {["Google", "Meta", "Instagram", "Facebook", "WhatsApp"].map((name) => (
-          <span key={name} className="text-[clamp(20px,2.8vw,38px)] font-medium tracking-[-0.05em] max-tablet:text-[25px]">
-            {name}
-          </span>
-        ))}
-      </div>
-    </div>
-  </section>
-);
-
 const MONO_SMALL = "font-home-mono font-medium";
 export const TestimonialsSection = () => {
   const [current, setCurrent] = useState(0);
@@ -437,9 +340,9 @@ export const TestimonialsSection = () => {
         </div>
         <div className="flex min-w-0 flex-col justify-between p-[clamp(25px,4vw,65px)] max-tablet:p-7">
           <div aria-live="polite" aria-atomic="true" ref={contentRef} key={current}>
-            <blockquote className="min-h-[205px] text-[clamp(23px,2.7vw,39px)] leading-[1.28] tracking-[-0.045em] max-lg:min-h-[180px] max-tablet:min-h-[210px] max-tablet:text-[27px]">
+            <AnimatedText as="blockquote" className="min-h-[205px] text-[clamp(23px,2.7vw,39px)] leading-[1.28] tracking-[-0.045em] max-lg:min-h-[180px] max-tablet:min-h-[210px] max-tablet:text-[27px]">
               “{quote.quote}”
-            </blockquote>
+            </AnimatedText>
             <div className="mt-[22px] flex items-center gap-3.5">
               <span className="grid size-[42px] place-items-center rounded-full border border-[#c4c2b7] text-[18px]" aria-hidden="true">
                 {quote.name.charAt(0)}

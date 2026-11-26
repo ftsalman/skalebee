@@ -64,3 +64,38 @@ body {
 ::selection {
   @apply bg-bee-yellow text-black;
 }
+
+[data-reveal-word] {
+  display: inline-block;
+}
+
+#about [data-ink] {
+  position: relative;
+  isolation: isolate;
+  white-space: nowrap;
+}
+
+#about [data-ink]::before {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  inset: -0.13em -0.32em;
+  background: var(--annotation) center / 100% 100% no-repeat;
+}
+
+#about [data-ink="highlight"]::before {
+  inset: 24% -0.13em 20%;
+  border-radius: 1em;
+  background: #ffe500;
+}
+
+#about [data-ink="pink"] { --annotation: url("/imgs/home/annotations/pink.png"); }
+#about [data-ink="blue"] { --annotation: url("/imgs/home/annotations/blue.png"); }
+#about [data-ink="underline"] { --annotation: url("/imgs/home/annotations/underline.png"); }
+#about [data-ink="underline"]::before { inset: auto 0 -0.06em; height: 0.28em; }
+
+#about a:focus-visible [data-reveal-word] {
+  opacity: 1 !important;
+  filter: none !important;
+}

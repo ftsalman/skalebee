@@ -490,26 +490,42 @@ export const LEAD_TO_SALES = {
 };
 
 // ---------- "How we keep you in the loop" section ----------
+// Two rows of tiles that drift in opposite directions. A tile is either
+// { text, icon } (white card), { video, poster } or { image }. Icons: see LOOP_ICONS in BusinessSections.
+const SERVICE_MEDIA = "/imgs/home/services";
+const LOOP_MEDIA = "/imgs/home/loop";
+const loopVideo = (name) => ({
+  video: `${SERVICE_MEDIA}/${name}.webm`,
+  poster: `${SERVICE_MEDIA}/${name}.webp`,
+});
+
 export const REVIEWS = {
   label: "Always in the loop",
   title: "We report. You stay in control.",
-  items: [
-    {
-      title: "Clear Monthly Reports",
-      text: "Monthly reports on leads, sales and cost per result, in plain language. You own your ad accounts and data.",
-      tag: "Every month",
-    },
-    {
-      title: "Regular Audits",
-      text: "Regular audits and tests show what's working and what to fix next, so results keep getting better.",
-      tag: "Always improving",
-    },
-    {
-      title: "Free Growth Audit",
-      text: "What's working, what's leaking money and the first three things to fix, with a clear 90-day plan.",
-      tag: "Free",
-      cta: "Get my free audit",
-    },
+  cta: "Get my free audit",
+  rows: [
+    [
+      { text: "Clear monthly reports", icon: "ChartBar" },
+      loopVideo("campaigns"),
+      { image: `${LOOP_MEDIA}/launch.webp` },
+      loopVideo("conversations"),
+      { text: "Plain-language results", icon: "ChatText" },
+      { image: `${LOOP_MEDIA}/strategy.webp` },
+      loopVideo("google-ads"),
+      { text: "Free 90-day growth plan", icon: "RocketLaunch" },
+      loopVideo("store"),
+    ],
+    [
+      loopVideo("websites"),
+      { text: "Regular audits & tests", icon: "MagnifyingGlass" },
+      { image: `${LOOP_MEDIA}/search.webp` },
+      loopVideo("performance"),
+      { text: "You own your ad accounts", icon: "ShieldCheck" },
+      { image: `${LOOP_MEDIA}/briefing.webp` },
+      loopVideo("launch"),
+      { text: "Cost per result, tracked", icon: "Target" },
+      { image: `${LOOP_MEDIA}/performance.webp` },
+    ],
   ],
 };
 

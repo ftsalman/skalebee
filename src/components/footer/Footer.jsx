@@ -1,4 +1,5 @@
-﻿import { cn } from "@turtle-ui/utils";
+import { AnimatedText } from "@/components/common/AnimatedText";
+import { cn } from "@turtle-ui/utils";
 import { CONTACT_INFO, SOCIAL_LINKS } from "@/constants/constants";
 import { hoverTo } from "@/hooks/useHoverMotion";
 
@@ -25,7 +26,7 @@ export const Footer = ({ rounded = false }) => {
     >
       <div className="mx-auto flex max-w-[1500px] flex-wrap items-center justify-between gap-x-8 gap-y-3.5 border-t border-[#e3e2ea] pt-[30px] pb-[clamp(26px,2.4vw,34px)] max-sm:flex-col max-sm:items-start">
         <p className="m-0 flex flex-wrap gap-2.5 text-[17px] max-sm:text-[15px]">
-          <span>Designed &amp; built by Skalebee</span>
+          <AnimatedText as="span">Designed &amp; built by Skalebee</AnimatedText>
           <span aria-hidden="true">·</span>
           <span>© {new Date().getFullYear()}</span>
         </p>

@@ -21,7 +21,7 @@ export const MainLayout = () => {
     <div className="flex min-h-dvh flex-col bg-bee-cream">
       <Navbar />
       {/* Full width: each page/section sets its own container */}
-      <main id="main-content" tabIndex={-1} className={`flex flex-1 flex-col ${isHome ? "" : "pt-12 lg:pt-20"}`}>
+      <main id="main-content" tabIndex={-1} className={`flex flex-1 flex-col ${isHome || pathname === "/about" ? "" : "pt-12 lg:pt-20"}`}>
         <Outlet />
       </main>
       <Footer rounded={isHome} />

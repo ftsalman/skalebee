@@ -1,3 +1,4 @@
+import { AnimatedText } from "@/components/common/AnimatedText";
 import { useRef } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
@@ -145,7 +146,7 @@ export const MetaSpecialistSection = () => {
             "relative flex min-h-[540px] flex-col items-center overflow-hidden pt-16 text-center max-lg:min-h-[460px] max-sm:min-h-[400px] max-sm:pt-11",
           )}
         >
-          <h3 className="m-0 text-[clamp(24px,2vw,32px)] font-normal tracking-[-0.05em]">{location.title}</h3>
+          <AnimatedText as="h3" className="m-0 text-[clamp(24px,2vw,32px)] font-normal tracking-[-0.05em]">{location.title}</AnimatedText>
           <p className="mt-2 flex items-center gap-3 font-home-mono text-[clamp(14px,1.2vw,19px)] font-medium uppercase leading-[1.4] text-[#cfcfcf] max-sm:text-[13px]">
             <span data-meta-dot className="size-3 rounded-full bg-[#36e03b] shadow-[0_0_0_0_rgba(54,224,59,0.5)]" aria-hidden="true" />
             {location.subtitle}
@@ -179,16 +180,16 @@ export const MetaSpecialistSection = () => {
             </figcaption>
           </figure>
           <div className="flex max-w-[640px] flex-col pt-[18px] pr-6 pb-2 max-lg:px-2 max-lg:pt-2 max-lg:pb-3">
-            <h2 id="meta-heading" className="mt-0 mb-8 text-[clamp(26px,2.1vw,32px)] font-normal tracking-[-0.04em]">
+            <AnimatedText as="h2" id="meta-heading" className="mt-0 mb-8 text-[clamp(26px,2.1vw,32px)] font-normal tracking-[-0.04em]">
               {person.heading}
-            </h2>
+            </AnimatedText>
             {person.bio.map((p) => (
-              <p key={p} className="mt-0 mb-[22px] text-base leading-[1.55] tracking-[-0.02em] text-[#e9e9e9]">
+              <AnimatedText as="p" key={p} className="mt-0 mb-[22px] text-base leading-[1.55] tracking-[-0.02em] text-[#e9e9e9]">
                 {p}
-              </p>
+              </AnimatedText>
             ))}
             <div id="founder-skills" className="mt-2 mb-auto scroll-mt-8 border-t border-[#303030] pt-5">
-              <h3 className="mb-[18px] font-home-mono text-sm font-medium text-[#dddde5]">Skills and tools I work with</h3>
+              <AnimatedText as="h3" className="mb-[18px] font-home-mono text-sm font-medium text-[#dddde5]">Skills and tools I work with</AnimatedText>
               <ul aria-label="Skills" className="flex flex-wrap gap-2.5">
                 {person.skills.map(skill => <li key={skill} className={SKILL_CHIP}>{skill}</li>)}
               </ul>
@@ -216,7 +217,7 @@ export const MetaSpecialistSection = () => {
             />
           </div>
           <div>
-            <h3 className="m-0 text-base font-medium">{partner.title}</h3>
+            <AnimatedText as="h3" className="m-0 text-base font-medium">{partner.title}</AnimatedText>
             <Link to="/#certifications" className={cn(LINK, "mt-1")} {...LINK_HOVER}>
               {partner.cta} <ArrowRightIcon size={14} aria-hidden="true" />
             </Link>
@@ -233,8 +234,8 @@ export const MetaSpecialistSection = () => {
         data-animate="fade-up"
       >
         <div>
-          <h3 className="m-0 text-base font-medium">{toolbox.title}</h3>
-          <p className={cn("mt-1 mb-0 text-[15px]", MUTED)}>{toolbox.subtitle}</p>
+          <AnimatedText as="h3" className="m-0 text-base font-medium">{toolbox.title}</AnimatedText>
+          <AnimatedText as="p" className={cn("mt-1 mb-0 text-[15px]", MUTED)}>{toolbox.subtitle}</AnimatedText>
         </div>
         <Marquee duration={40} pauseOnHover className="[mask-image:linear-gradient(90deg,transparent,#000_8%,#000_92%,transparent)]">
           {toolbox.tools.map((tool) => (

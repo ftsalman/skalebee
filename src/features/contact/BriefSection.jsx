@@ -1,3 +1,4 @@
+import { AnimatedText } from "@/components/common/AnimatedText";
 import { useEffect, useId, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -366,9 +367,9 @@ export const BriefSection = ({ id, headingLevel = "h1", variant = "section", int
     >
       {isModal ? (
         <header className="pr-14 pb-[22px] pl-1">
-          <Heading id={ids.title} className="m-0 text-[clamp(26px,2.4vw,36px)] font-normal leading-[1.12] tracking-[-0.04em]">
+          <AnimatedText as={Heading} id={ids.title} className="m-0 text-[clamp(26px,2.4vw,36px)] font-normal leading-[1.12] tracking-[-0.04em]">
             {header.title} <span className={cn("block", MUTED)}>{header.muted}</span>
-          </Heading>
+          </AnimatedText>
         </header>
       ) : (
         <div
@@ -380,10 +381,10 @@ export const BriefSection = ({ id, headingLevel = "h1", variant = "section", int
             focused && "invisible opacity-0 max-[900px]:hidden",
           )}
         >
-          <Heading id={ids.title} className="m-0 text-[clamp(36px,3.4vw,58px)] font-normal leading-[1.08] tracking-[-0.05em]">
+          <AnimatedText as={Heading} id={ids.title} className="m-0 text-[clamp(36px,3.4vw,58px)] font-normal leading-[1.08] tracking-[-0.05em]">
             {BRIEF.title} <span className={cn("block", MUTED)}>{BRIEF.muted}</span>
-          </Heading>
-          <p className="mt-[22px] mb-0 text-[18px] text-[#6c6a80]">{BRIEF.note}</p>
+          </AnimatedText>
+          <AnimatedText as="p" className="mt-[22px] mb-0 text-[18px] text-[#6c6a80]">{BRIEF.note}</AnimatedText>
           <div className="mt-auto pt-14 max-[900px]:pt-8">
             <ChatBubble lines={BRIEF.message} start={chatVisible} />
             <span className={cn(MONO, MUTED, "mt-2 ml-16 block text-[13px] leading-[1.4]")}>{BRIEF.signature}</span>

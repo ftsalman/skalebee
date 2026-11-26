@@ -1,23 +1,26 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import {
-  CalendarCheckIcon,
   ChartBarIcon,
   ChatCircleDotsIcon,
+  ChatTextIcon,
   CertificateIcon,
   ChartLineUpIcon,
   CheckIcon,
   CursorClickIcon,
   HandshakeIcon,
   MagnifyingGlassIcon,
+  RocketLaunchIcon,
   SealCheckIcon,
+  ShieldCheckIcon,
   StackIcon,
   TargetIcon,
 } from "@phosphor-icons/react";
 import { cn } from "@turtle-ui/utils";
 import { AnimatedText } from "@/components/common/AnimatedText";
+import { Marquee } from "@/components/common/Marquee";
 import { PillButton } from "@/components/common/PillButton";
 import { hoverTo } from "@/hooks/useHoverMotion";
 import {
@@ -26,7 +29,14 @@ import {
   PRICING,
   REVIEWS,
 } from "../constants/homeData";
-import { CONTENT_NOTE, SECTION, TITLE } from "./homeStyles";
+import {
+  CONTENT_NOTE,
+  SECTION,
+  SECTION_HEADING,
+  SECTION_X,
+  SECTION_Y,
+  TITLE,
+} from "./homeStyles";
 import { SectionLabel } from "./homeUi";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -171,12 +181,12 @@ export const LeadToSalesSection = () => {
             "z-[1] grid place-items-center px-6 text-center max-lg:p-0",
           )}
         >
-          <h2
+          <AnimatedText as="h2"
             id="l2s-heading"
             className="m-0 max-w-[820px] text-[clamp(44px,min(5.6vw,10vh),100px)] font-semibold leading-[1.04] tracking-[-0.06em]"
           >
             {LEAD_TO_SALES.title}
-          </h2>
+          </AnimatedText>
         </div>
 
         <ol
@@ -317,60 +327,158 @@ export const CertificationsSection = () => {
   );
 };
 
-/* ---------- Weekly review / monthly meeting / free business review ---------- */
-const REVIEW_ICONS = [ChartBarIcon, CalendarCheckIcon, MagnifyingGlassIcon];
+/* ---------- Always in the loop: two rows of tiles drifting in opposite directions ---------- */
+const LOOP_ICONS = {
+  ChartBar: ChartBarIcon,
+  ChatText: ChatTextIcon,
+  RocketLaunch: RocketLaunchIcon,
+  MagnifyingGlass: MagnifyingGlassIcon,
+  ShieldCheck: ShieldCheckIcon,
+  Target: TargetIcon,
+};
 
-export const ReviewsSection = () => (
-  <section className={SECTION} id="reviews" aria-labelledby="reviews-heading">
-    <SectionLabel>{REVIEWS.label}</SectionLabel>
-    <div id="reviews-heading">
-      <AnimatedText text={REVIEWS.title} className={TITLE} />
+// Seconds for one full pass of a row (~50px/s at desktop tile size)
+const LOOP_DURATION = 75;
+
+// mr-3 (not a parent gap) so the space after the last tile matches, keeping the loop seamless
+const LOOP_TILE =
+  "mr-3 aspect-[5/3] w-[clamp(220px,21vw,420px)] shrink-0 overflow-hidden rounded-[22px]";
+
+// The finished illustration sits underneath; each time the tile slides into view the short
+// draw-in video plays once over it and holds on its last frame (same idea as ServicesSection).
+const LoopVideo = ({ tile }) => {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let visible = false;
+    let attempt = 0;
+    const update = () => {
+      const token = ++attempt;
+      video.hidden = true;
+      if (!visible || reduce.matches) {
+        video.pause();
+        return;
+      }
+      video.currentTime = 0;
+      video
+        .play()
+        .then(() => {
+          if (token === attempt) video.hidden = false;
+        })
+        .catch(() => {});
+    };
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        update();
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(video.parentElement);
+    reduce.addEventListener("change", update);
+    return () => {
+      ++attempt;
+      observer.disconnect();
+      reduce.removeEventListener("change", update);
+      video.pause();
+    };
+  }, []);
+
+  const media = "absolute inset-0 size-full object-cover";
+  return (
+    <div className={cn(LOOP_TILE, "relative bg-[#e9ecf2]")}>
+      <img
+        src={tile.poster}
+        alt=""
+        loading="lazy"
+        decoding="async"
+        className={media}
+      />
+      <video
+        ref={videoRef}
+        src={tile.video}
+        muted
+        playsInline
+        preload="none"
+        hidden
+        aria-hidden="true"
+        className={media}
+        onError={(event) => {
+          event.currentTarget.hidden = true;
+        }}
+      />
     </div>
-    <div
-      className="mt-16 grid grid-cols-3 gap-3.5 max-lg:max-w-[560px] max-lg:grid-cols-1"
-      data-animate="stagger"
+  );
+};
+
+const LoopTile = ({ tile }) => {
+  if (tile.text) {
+    const Icon = LOOP_ICONS[tile.icon] ?? ChartBarIcon;
+    return (
+      <div
+        className={cn(
+          LOOP_TILE,
+          "flex flex-col justify-between bg-white p-[clamp(18px,1.3vw,26px)] text-[#111]",
+        )}
+      >
+        <span
+          className="grid size-[clamp(38px,2.6vw,50px)] place-items-center rounded-xl bg-[#f1f4f8]"
+          aria-hidden="true"
+        >
+          <Icon weight="light" className="size-[48%]" />
+        </span>
+        <p className="m-0 max-w-[230px] text-[clamp(15px,1.05vw,19px)] leading-[1.4] tracking-[-0.01em]">
+          {tile.text}
+        </p>
+      </div>
+    );
+  }
+  if (tile.video) return <LoopVideo tile={tile} />;
+  return (
+    <img
+      src={tile.image}
+      alt=""
+      loading="lazy"
+      width="800"
+      height="480"
+      className={cn(LOOP_TILE, "bg-[#e9ecf2] object-cover")}
+    />
+  );
+};
+
+export const ReviewsSection = () => {
+  return (
+    <section
+      className={cn(SECTION_Y, "overflow-hidden bg-[#f3f4f7]")}
+      id="reviews"
+      aria-labelledby="reviews-heading"
     >
-      {REVIEWS.items.map((item, i) => {
-        const Icon = REVIEW_ICONS[i % REVIEW_ICONS.length];
-        const highlight = Boolean(item.cta);
-        return (
-          <article
-            key={item.title}
-            className={cn(
-              "flex flex-col gap-3.5 rounded-lg border border-home-line bg-[#faf8f2] p-7",
-              highlight && "border-home-accent bg-home-accent",
-            )}
-          >
-            <div className="mb-9 flex items-center justify-between">
-              <span className="grid size-[52px] place-items-center rounded-full bg-home-ink text-home-accent">
-                <Icon size={26} />
-              </span>
-              <span className="rounded-full border border-current px-2.5 py-[5px] font-home-mono text-[10px] font-medium uppercase leading-[1.4]">
-                {item.tag}
-              </span>
-            </div>
-            <h3 className="text-[clamp(24px,2.2vw,32px)] font-normal tracking-[-0.045em]">
-              {item.title}
-            </h3>
-            <p
-              className={cn(
-                "text-[15px] leading-[1.6]",
-                highlight ? "text-[#2a2a22]" : "text-[#4a4a42]",
-              )}
-            >
-              {item.text}
-            </p>
-            {item.cta && (
-              <PillButton to="/#contact" className="mt-auto self-start">
-                {item.cta}
-              </PillButton>
-            )}
-          </article>
-        );
-      })}
-    </div>
-  </section>
-);
+      <div className={cn(SECTION_X, SECTION_HEADING)}>
+        <div>
+          <SectionLabel>{REVIEWS.label}</SectionLabel>
+          <div id="reviews-heading">
+            <AnimatedText text={REVIEWS.title} className={TITLE} />
+          </div>
+        </div>
+        <PillButton to="/#contact" className="shrink-0">
+          {REVIEWS.cta}
+        </PillButton>
+      </div>
+      {/* Top row drifts left, bottom row drifts right; both edges fade out */}
+      <div className="flex flex-col gap-3 [mask-image:linear-gradient(90deg,transparent,#000_7%,#000_93%,transparent)]">
+        {REVIEWS.rows.map((row, i) => (
+          <Marquee key={i} duration={LOOP_DURATION} reverse={i % 2 === 1}>
+            {row.map((tile, j) => (
+              <LoopTile key={j} tile={tile} />
+            ))}
+          </Marquee>
+        ))}
+      </div>
+    </section>
+  );
+};
 
 /* ---------- Pricing ---------- */
 export const PricingSection = () => (

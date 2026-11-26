@@ -1,3 +1,4 @@
+import { AnimatedText } from "@/components/common/AnimatedText";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
@@ -426,12 +427,12 @@ export const BuildCtaSection = () => {
             selected !== null && "pointer-events-none",
           )}
         >
-          <h2
+          <AnimatedText as="h2"
             id="bf-heading"
             className="m-0 whitespace-nowrap text-[clamp(26px,2vw,34px)] font-normal tracking-[-0.03em] text-white"
           >
             {BUILD_CTA.title}
-          </h2>
+          </AnimatedText>
           <button
             type="button"
             onClick={() => openContactModal({ intent: "call" })}

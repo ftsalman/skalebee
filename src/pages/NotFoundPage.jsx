@@ -1,3 +1,4 @@
+import { AnimatedText } from "@/components/common/AnimatedText";
 // Created By Muhammed Sahad on 02/09/2026 for AFE-ESS-002 - Design Unauthorized page
 
 
@@ -8,13 +9,13 @@ export const NotFoundPage = () => (
     <div className="size-full flex flex-col items-center justify-center">
       <img src="/svgs/icon.svg" alt="" width="96" height="96" className="w-24" />
 
-      <h1 className="mt-2.5 text-h4 text-center text-headings">
+      <AnimatedText as="h1" className="mt-2.5 text-h4 text-center text-headings">
         404 - Page Not Found
-      </h1>
+      </AnimatedText>
 
-      <p className="mt-1.5 mb-4 text-center text-gray-400">
+      <AnimatedText as="p" className="mt-1.5 mb-4 text-center text-gray-400">
         The page you are looking for could not be found.
-      </p>
+      </AnimatedText>
 
       <Button variant="tertiary">
         <p className="underline text-md ">Contact Admin</p>

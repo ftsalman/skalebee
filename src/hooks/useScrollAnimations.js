@@ -11,7 +11,6 @@ gsap.registerPlugin(ScrollTrigger, useGSAP);
  *   data-animate="fade-in"     fade in
  *   data-animate="scale-in"    fade + scale up
  *   data-animate="stagger"     animate the direct children one after another
- *   data-animate="words"       animate `.word-inner` spans (see <AnimatedText>)
  *   data-delay="0.2"           optional delay (seconds)
  *   data-start="top bottom"    optional: when to start (default "top 85%")
  *   data-parallax="0.3"        parallax: moves at a different speed while scrolling
@@ -76,17 +75,6 @@ export default function useScrollAnimations(scopeRef) {
             stagger: 0.12,
             delay: delayOf(el),
             scrollTrigger: trigger(el),
-          }),
-        );
-
-        q('[data-animate="words"]').forEach((el) =>
-          gsap.from(el.querySelectorAll(".word-inner"), {
-            yPercent: 110,
-            duration: 0.9,
-            ease: "power4.out",
-            stagger: 0.06,
-            delay: delayOf(el),
-            scrollTrigger: trigger(el, "top 90%"),
           }),
         );
 

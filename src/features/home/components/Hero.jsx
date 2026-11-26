@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useRef } from "react";
+import { AnimatedText } from "@/components/common/AnimatedText";
+import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -493,27 +494,10 @@ export const Hero = () => {
           </span>
         </div>
 
-        <h1
-          id="hero-heading"
-          className="mt-[18px] mb-0 text-[clamp(44px,4.25vw,88px)] font-normal leading-[1.08] tracking-[-0.045em] text-[#3d3b52]"
-          data-animate="words"
-          data-start="top bottom"
-          aria-label={LINES.join(" ")}
-        >
-          {LINES.map((line, i) => (
-            <span key={i} aria-hidden="true" className="block">
-              {/* The space sits between the word boxes: trailing spaces inside an inline-block collapse */}
-              {line.split(" ").map((word, j, words) => (
-                <Fragment key={j}>
-                  <span className="inline-block overflow-hidden pb-[0.08em] align-bottom">
-                    <span className="word-inner inline-block">{word}</span>
-                  </span>
-                  {j < words.length - 1 && " "}
-                </Fragment>
-              ))}
-            </span>
-          ))}
-        </h1>
+        <AnimatedText as="h1" id="hero-heading" aria-label={LINES.join(" ")}
+          className="mt-[18px] mb-0 text-[clamp(44px,4.25vw,88px)] font-normal leading-[1.08] tracking-[-0.045em] text-[#3d3b52]">
+          {LINES.map((line) => <span key={line} className="block">{line}</span>)}
+        </AnimatedText>
 
         <div className="mt-11 flex flex-wrap justify-center gap-4" data-animate="fade-up" data-start="top bottom" data-delay="0.4">
           <Link
@@ -542,9 +526,9 @@ export const Hero = () => {
           </Link>
         </div>
 
-        <p className="mt-4 font-home-mono text-[15px] font-medium leading-[1.4] text-[#2f2f36]" data-animate="fade-in" data-start="top bottom" data-delay="0.6">
+        <AnimatedText as="p" className="mt-4 font-home-mono text-[15px] font-medium leading-[1.4] text-[#2f2f36]" >
           {HERO.since}
-        </p>
+        </AnimatedText>
       </div>
     </section>
   );

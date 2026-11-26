@@ -1,45 +1,67 @@
-import { cn } from "@turtle-ui/utils";
+﻿import { Children, cloneElement, isValidElement, useRef } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useGSAP } from "@gsap/react";
 
-/**
- * Splits text into words that slide up one by one (with useScrollAnimations).
- * Words listed in `highlight` get `highlightClassName`.
- *
- *   <AnimatedText as="h2" text="Ads that make your brand buzz" highlight={["buzz"]} />
- */
-export const AnimatedText = ({
-  as: Tag = "h2",
-  text,
-  highlight = [],
-  highlightClassName = "text-bee-yellow",
-  className,
-  delay,
-}) => {
-  const words = text.split(" ");
-  return (
-    <Tag
-      className={cn(className)}
-      data-animate="words"
-      data-delay={delay}
-      aria-label={text}
-    >
-      {words.map((word, i) => (
-        <span
-          key={`${word}-${i}`}
-          aria-hidden="true"
-          className="inline-block overflow-hidden pb-[0.08em] align-bottom"
-        >
-          <span
-            className={cn(
-              "word-inner inline-block",
-              highlight.includes(word.replace(/[.,!?]/g, "")) &&
-                highlightClassName,
-            )}
-          >
+gsap.registerPlugin(useGSAP, ScrollTrigger);
+
+// Keep JSX emphasis, links, whitespace and line breaks in the reading order.
+function splitWords(children, highlight, highlightClassName) {
+  return Children.map(children, (child) => {
+    if (typeof child === "string" || typeof child === "number") {
+      return String(child).split(/(\s+)/).map((word, index) =>
+        !word.trim() ? word : (
+          <span key={index} data-reveal-word=""
+            className={highlight.includes(word.replace(/[.,!?]/g, "")) ? highlightClassName : undefined}>
             {word}
-            {i < words.length - 1 && " "}
           </span>
-        </span>
-      ))}
-    </Tag>
-  );
-};
+        ),
+      );
+    }
+    if (!isValidElement(child) || !child.props.children) return child;
+    // Keep an annotated phrase and its pen stroke together.
+    if (child.props["data-ink"]) return cloneElement(child, { "data-reveal-word": "" });
+    return cloneElement(child, {}, splitWords(child.props.children, highlight, highlightClassName));
+  });
+}
+
+export function AnimatedText({
+  as: Tag = "h2", text, children, highlight = [], highlightClassName = "text-bee-yellow",
+  scrub = false, delay = 0, ...props
+}) {
+  const root = useRef(null);
+  useGSAP(() => {
+    const media = gsap.matchMedia();
+    media.add("(prefers-reduced-motion: no-preference)", () => {
+      const element = root.current;
+      const words = element.querySelectorAll("[data-reveal-word]");
+      if (!words.length) return;
+
+      const reveal = gsap.fromTo(words, { opacity: 0.045, filter: "blur(4px)" }, {
+        opacity: 1, filter: "blur(0px)", duration: 0.55, ease: "power1.out",
+        stagger: scrub ? 0.18 : { amount: Math.min(0.44, words.length * 0.035) },
+        paused: !scrub, delay: scrub ? 0 : delay,
+        ...(scrub ? {
+          scrollTrigger: {
+            trigger: element, start: "top 82%", end: "bottom 70%", scrub: 0.15,
+            invalidateOnRefresh: true,
+          },
+        } : { clearProps: "filter,opacity" }),
+      });
+      if (scrub) return;
+
+      // Intersection also follows pinned panels, open dialogs and newly mounted cards.
+      const observer = new IntersectionObserver((entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          reveal.play();
+          observer.disconnect();
+        }
+      });
+      observer.observe(element);
+      return () => observer.disconnect();
+    });
+    return () => media.revert();
+  }, { scope: root, dependencies: [text, scrub, delay, typeof children === "string" ? children : null], revertOnUpdate: true });
+
+  return <Tag ref={root} {...props}>{splitWords(text ?? children, highlight, highlightClassName)}</Tag>;
+}
