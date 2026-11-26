@@ -5,10 +5,9 @@ import {
   BrandStrip,
   FeaturedWork,
   AboutSection,
-  ProcessSection,
   TestimonialsSection,
-  FaqSection,
 } from "../components/HomeSections";
+import { FaqSection } from "../components/FaqSection";
 import { PlatformsOrbit } from "../components/PlatformsOrbit";
 import {
   CertificationsSection,
@@ -18,6 +17,7 @@ import {
 } from "../components/BusinessSections";
 import { MetaSpecialistSection } from "../components/MetaSpecialistSection";
 import { ServicesSection } from "../components/ServicesSection";
+import { ProcessSection } from "../components/ProcessSection";
 import { BriefSection } from "@/features/contact/BriefSection";
 import useHomeMotion from "@/hooks/useHomeMotion";
 import { SECTION_Y } from "../components/homeStyles";

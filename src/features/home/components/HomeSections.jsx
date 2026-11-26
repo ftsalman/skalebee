@@ -5,7 +5,6 @@ import {
   ArrowUpRightIcon,
   ArrowRightIcon,
   ArrowLeftIcon,
-  PlusIcon,
   XIcon,
   CheckIcon,
 } from "@phosphor-icons/react";
@@ -14,10 +13,8 @@ import { PillButton } from "@/components/common/PillButton";
 import { Marquee } from "@/components/common/Marquee";
 import { hoverTo } from "@/hooks/useHoverMotion";
 import {
-  APPROACH,
   CASE_STUDIES,
   FEATURED_WORK,
-  FAQS,
   STATS,
   TESTIMONIALS,
   WHY_US,
@@ -28,7 +25,7 @@ import { SectionLabel, SectionTitle, TextLink } from "./homeUi";
 gsap.registerPlugin(useGSAP);
 const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-// Content that swaps in (testimonial, FAQ answer) fades up a little
+// The next testimonial fades up a little
 const contentIn = (el, duration = 0.3) => {
   if (el && !reduceMotion()) gsap.from(el, { autoAlpha: 0, y: 8, duration, ease: "power1.out" });
 };
@@ -395,51 +392,6 @@ export const AboutSection = () => (
 );
 
 const MONO_SMALL = "font-home-mono font-medium";
-const PROCESS_TITLE = "text-[clamp(42px,5vw,72px)] max-tablet:text-[43px]";
-
-export const ProcessSection = () => (
-  <section
-    className={cn(
-      SECTION,
-      "grid grid-cols-2 items-start gap-[11%] bg-[#e5e3d9] max-lg:gap-[6%] max-tablet:grid-cols-1 max-tablet:gap-[35px]",
-    )}
-    id="process"
-    aria-labelledby="process-heading"
-  >
-    <div className="sticky top-[150px] max-lg:top-[115px] max-tablet:static">
-      <SectionLabel>How it works</SectionLabel>
-      <div id="process-heading">
-        <SectionTitle className={PROCESS_TITLE}>Your growth journey in 8 simple steps.</SectionTitle>
-      </div>
-      <p className="my-[25px] max-w-[320px] text-base leading-[1.7] text-[#626258]">
-        Every Skalebee plan follows the same path: get seen, get chosen, reply
-        fast, close the sale and keep improving.
-      </p>
-      <span className={cn(MONO_SMALL, "inline-flex items-center gap-[15px] text-[11px] uppercase")}>
-        Keep moving <ArrowRightIcon size={18} />
-      </span>
-    </div>
-    <div className="border-t border-[#b7b7a9]">
-      {APPROACH.map((step, index) => (
-        <article
-          className="grid min-h-[240px] grid-cols-[35px_1fr_32px] gap-5 border-b border-[#b7b7a9] py-[42px] max-lg:grid-cols-[25px_1fr_25px] max-lg:gap-3.5 max-tablet:min-h-[180px] max-tablet:py-[30px]"
-          key={step.title}
-          data-home-step
-        >
-          <span className={cn(MONO_SMALL, "mt-[11px] text-xs")}>0{index + 1}</span>
-          <div>
-            <h3 className="mb-5 text-[clamp(35px,3.7vw,54px)] font-normal leading-none tracking-[-0.06em] max-tablet:text-[42px]">
-              {step.title}
-            </h3>
-            <p className="max-w-[330px] text-base leading-[1.65] text-[#626258] max-tablet:text-[15px]">{step.description}</p>
-          </div>
-          <ArrowUpRightIcon size={32} aria-hidden="true" className="mt-[5px]" />
-        </article>
-      ))}
-    </div>
-  </section>
-);
-
 export const TestimonialsSection = () => {
   const [current, setCurrent] = useState(0);
   const contentRef = useRef(null);
@@ -527,47 +479,3 @@ export const TestimonialsSection = () => {
     </section>
   );
 };
-
-// Opening a question turns its + into × and fades the answer in (GSAP)
-const toggleFaq = (event) => {
-  const details = event.currentTarget;
-  const instant = reduceMotion();
-  gsap.to(details.querySelector("[data-faq-icon]"), { rotation: details.open ? 45 : 0, duration: instant ? 0 : 0.25, ease: "power1.out" });
-  if (details.open) contentIn(details.querySelector("[data-faq-answer]"));
-};
-
-export const FaqSection = () => (
-  <section
-    className={cn(SECTION, "grid grid-cols-[1fr_1.1fr] gap-[12%] max-lg:gap-[6%] max-tablet:grid-cols-1 max-tablet:gap-[35px]")}
-    id="faq"
-    aria-labelledby="faq-heading"
-  >
-    <div>
-      <SectionLabel>A little clarity</SectionLabel>
-      <div id="faq-heading">
-        <SectionTitle className="text-[clamp(40px,4.5vw,65px)] max-tablet:text-[43px]">Questions brands ask us.</SectionTitle>
-      </div>
-      <p className="mt-[30px] text-[15px] leading-[1.8] text-[#69695d]">
-        Still have something on your mind?
-        <br />
-        <TextLink to="/#contact" iconSize={18} className="mt-3 text-home-ink">
-          Let’s talk it through
-        </TextLink>
-      </p>
-    </div>
-    <div className={cn("border-t", LINE)}>
-      {FAQS.map((faq, index) => (
-        <details key={faq.question} name="home-faq" className={cn("border-b", LINE)} onToggle={toggleFaq}>
-          <summary className="flex list-none items-center gap-[17px] py-[25px] text-[17px] leading-[1.4] max-tablet:py-[23px] max-tablet:text-base [&::-webkit-details-marker]:hidden">
-            <span className={cn(MONO_SMALL, "text-[10px] text-[#78786b]")}>0{index + 1}</span>
-            <span className="flex-1">{faq.question}</span>
-            <PlusIcon size={21} aria-hidden="true" className="shrink-0" data-faq-icon />
-          </summary>
-          <div className="px-[30px] pb-[25px] text-sm leading-[1.8] text-[#636358]" data-faq-answer>
-            <p>{faq.answer}</p>
-          </div>
-        </details>
-      ))}
-    </div>
-  </section>
-);

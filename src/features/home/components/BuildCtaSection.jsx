@@ -22,15 +22,19 @@ const CARDS = Array.from({ length: COLUMNS * ROWS }, (_, i) => {
 });
 
 const clamp = (value, limit) => Math.max(-limit, Math.min(limit, value));
-const reduced = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const YELLOW_RING = "focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-bee-yellow";
+const reduced = () =>
+  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const YELLOW_RING =
+  "focus-visible:outline-3 focus-visible:outline-offset-3 focus-visible:outline-bee-yellow";
 
 function useField(stageRef, selectedRef) {
   useLayoutEffect(() => {
     const stage = stageRef.current;
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const cards = Array.from(stage.children, (el) => ({
-      el, front: el.querySelector("[data-bf-front]"), flight: 0,
+      el,
+      front: el.querySelector("[data-bf-front]"),
+      flight: 0,
     }));
     let width, height, radius, spacing, thumbnail, preview;
     let rotation = STEP / 4;
@@ -43,11 +47,14 @@ function useField(stageRef, selectedRef) {
     const draw = (dt) => {
       const selected = selectedRef.current;
       const focused = document.activeElement;
-      const paused = selected !== null || drag?.moved || (stage.contains(focused) && focused.matches(":focus-visible"));
+      const paused =
+        selected !== null ||
+        drag?.moved ||
+        (stage.contains(focused) && focused.matches(":focus-visible"));
       if (selected !== null) velocity = 0;
       running += ((paused ? 0 : 1) - running) * (1 - Math.exp(-9 * dt));
       if (!motion.matches && !drag?.moved) {
-        rotation += (velocity - 0.10 * running) * dt;
+        rotation += (velocity - 0.1 * running) * dt;
         velocity *= Math.exp(-5 * dt);
       }
 
@@ -55,13 +62,17 @@ function useField(stageRef, selectedRef) {
         const { el, front } = card;
         const active = selected === i;
         const target = active ? 1 : 0;
-        card.flight = motion.matches ? target :
-          target + (card.flight - target) * Math.exp(-(active ? 6 : 10) * dt);
+        card.flight = motion.matches
+          ? target
+          : target + (card.flight - target) * Math.exp(-(active ? 6 : 10) * dt);
         if (Math.abs(target - card.flight) < 0.001) card.flight = target;
 
         const t = CARDS[i].angle + rotation;
         const angle = Math.atan2(Math.sin(t), Math.cos(t));
-        const hidden = !active && card.flight === 0 && Math.abs(angle) > Math.atan(width / (2 * radius)) + STEP / 2;
+        const hidden =
+          !active &&
+          card.flight === 0 &&
+          Math.abs(angle) > Math.atan(width / (2 * radius)) + STEP / 2;
         if (el.hidden !== hidden) el.hidden = hidden;
         if (hidden) return;
 
@@ -69,7 +80,7 @@ function useField(stageRef, selectedRef) {
         // same card in flight. Both endpoints stay valid if the viewport changes size.
         const depth = Math.cos(angle);
         const slotX = -radius * Math.tan(angle);
-        const slotY = CARDS[i].row * spacing / depth;
+        const slotY = (CARDS[i].row * spacing) / depth;
         const f = card.flight;
         const rest = 1 - f;
         const focusX = clamp(slotX * 0.17, (width - preview) / 2);
@@ -77,16 +88,23 @@ function useField(stageRef, selectedRef) {
         const distance = depth * rest + f;
         const x = (slotX * rest + focusX * f) * distance;
         const y = (slotY * rest + focusY * f) * distance;
-        const scale = thumbnail / preview * rest + f;
+        const scale = (thumbnail / preview) * rest + f;
         el.style.transform = `perspective(${radius}px) translate3d(${x}px,${y}px,${radius * (1 - distance)}px) rotateY(${angle * rest}rad) scale(${scale})`;
 
-        const clearance = Math.hypot(slotX / (width * 0.32), slotY / (height * 0.36));
+        const clearance = Math.hypot(
+          slotX / (width * 0.32),
+          slotY / (height * 0.36),
+        );
         const alpha = Math.min(1, Math.max(0, (clearance - 0.48) * 1.7));
         el.style.opacity = alpha * rest + f;
-        const interactive = active || (alpha > 0.15 && Math.abs(slotX) < width / 2 + thumbnail / 2
-          && Math.abs(slotY) < height / 2 + thumbnail / 2);
+        const interactive =
+          active ||
+          (alpha > 0.15 &&
+            Math.abs(slotX) < width / 2 + thumbnail / 2 &&
+            Math.abs(slotY) < height / 2 + thumbnail / 2);
         el.style.pointerEvents = interactive ? "" : "none";
-        const tabIndex = interactive && (selected === null || active) && !front.inert ? 0 : -1;
+        const tabIndex =
+          interactive && (selected === null || active) && !front.inert ? 0 : -1;
         if (front.tabIndex !== tabIndex) front.tabIndex = tabIndex;
         el.style.zIndex = active ? 3 : f > 0 ? 2 : 0;
       });
@@ -99,13 +117,21 @@ function useField(stageRef, selectedRef) {
       radius = size * 0.51;
       thumbnail = size * 0.087;
       spacing = Math.max(size * 0.071, height * 0.157);
-      preview = Math.min(Math.max(width * 0.29, 292), width - 24, (height - 32) / 0.75);
+      preview = Math.min(
+        Math.max(width * 0.29, 292),
+        width - 24,
+        (height - 32) / 0.75,
+      );
       stage.style.setProperty("--bf-preview", `${preview}px`);
       draw(0);
     };
 
     const wheel = (event) => {
-      if (event.ctrlKey || stage.getBoundingClientRect().bottom > window.innerHeight + 2) return;
+      if (
+        event.ctrlKey ||
+        stage.getBoundingClientRect().bottom > window.innerHeight + 2
+      )
+        return;
       // The section sits above the footer, so vertical scrolling must keep moving the page
       // (otherwise visitors get stuck here). Vertical wheel turns the cylinder *and* scrolls;
       // only sideways trackpad swipes are kept for the cylinder alone.
@@ -115,9 +141,10 @@ function useField(stageRef, selectedRef) {
         event.stopPropagation();
       }
       if (selectedRef.current !== null) return;
-      const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? height : 1;
+      const unit =
+        event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? height : 1;
       const delta = sideways ? event.deltaX : -event.deltaY;
-      const turn = delta * unit / radius;
+      const turn = (delta * unit) / radius;
       if (motion.matches) {
         rotation += turn;
         draw(0);
@@ -127,9 +154,20 @@ function useField(stageRef, selectedRef) {
     };
 
     const down = (event) => {
-      if (!event.isPrimary || event.button !== 0 || selectedRef.current !== null) return;
+      if (
+        !event.isPrimary ||
+        event.button !== 0 ||
+        selectedRef.current !== null
+      )
+        return;
       swallowClick = false;
-      drag = { id: event.pointerId, start: event.clientX, last: event.clientX, time: event.timeStamp, moved: false };
+      drag = {
+        id: event.pointerId,
+        start: event.clientX,
+        last: event.clientX,
+        time: event.timeStamp,
+        moved: false,
+      };
     };
     const move = (event) => {
       if (!drag || event.pointerId !== drag.id) return;
@@ -139,7 +177,10 @@ function useField(stageRef, selectedRef) {
       stage.classList.add("is-dragging");
       const turn = (drag.last - event.clientX) / radius;
       rotation += turn;
-      velocity = clamp(turn * 1000 / Math.max(8, event.timeStamp - drag.time), 5);
+      velocity = clamp(
+        (turn * 1000) / Math.max(8, event.timeStamp - drag.time),
+        5,
+      );
       drag.last = event.clientX;
       drag.time = event.timeStamp;
       draw(0);
@@ -147,7 +188,8 @@ function useField(stageRef, selectedRef) {
     const up = (event) => {
       if (!drag || event.pointerId !== drag.id) return;
       swallowClick = drag.moved;
-      if (event.type === "pointercancel" || event.timeStamp - drag.time > 80) velocity = 0;
+      if (event.type === "pointercancel" || event.timeStamp - drag.time > 80)
+        velocity = 0;
       drag = null;
       stage.classList.remove("is-dragging");
     };
@@ -157,9 +199,13 @@ function useField(stageRef, selectedRef) {
         swallowClick = false;
       }
     };
-    const tick = (_, ms) => { if (visible) draw(Math.min(ms, 50) / 1000); };
+    const tick = (_, ms) => {
+      if (visible) draw(Math.min(ms, 50) / 1000);
+    };
     const resize = new ResizeObserver(measure);
-    const visibility = new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; });
+    const visibility = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+    });
     measure();
     resize.observe(stage);
     visibility.observe(stage);
@@ -205,42 +251,56 @@ export const BuildCtaSection = () => {
 
   // Open card: the others dim and the centre button fades away. The selected card flips
   // to show its details (and flips back when it closes).
-  useGSAP(() => {
-    const open = selected !== null;
-    const fast = reduced();
-    const q = gsap.utils.selector(stageRef);
-    gsap.to(stageRef.current.children, {
-      filter: (i) => (open && i !== selected ? "brightness(0.48)" : "brightness(1)"),
-      duration: fast ? 0 : 0.32,
-      ease: "power1.out",
-      overwrite: "auto",
-    });
-    q("[data-bf-flip]").forEach((flip, i) => {
-      const angle = i === selected && flipped ? 180 : 0;
-      if (gsap.getProperty(flip, "rotationY") !== angle) {
-        gsap.to(flip, { rotationY: angle, transformPerspective: 1400, duration: fast ? 0 : 0.48, ease: "power3.out", overwrite: true });
-      }
-    });
-    gsap.to(ctaRef.current, {
-      opacity: open ? 0 : 1,
-      scale: open ? 0.94 : 1,
-      duration: fast ? 0 : 0.45,
-      ease: "power3.out",
-      overwrite: true,
-    });
-  }, { dependencies: [selected, flipped] });
+  useGSAP(
+    () => {
+      const open = selected !== null;
+      const fast = reduced();
+      const q = gsap.utils.selector(stageRef);
+      gsap.to(stageRef.current.children, {
+        filter: (i) =>
+          open && i !== selected ? "brightness(0.48)" : "brightness(1)",
+        duration: fast ? 0 : 0.32,
+        ease: "power1.out",
+        overwrite: "auto",
+      });
+      q("[data-bf-flip]").forEach((flip, i) => {
+        const angle = i === selected && flipped ? 180 : 0;
+        if (gsap.getProperty(flip, "rotationY") !== angle) {
+          gsap.to(flip, {
+            rotationY: angle,
+            transformPerspective: 1400,
+            duration: fast ? 0 : 0.48,
+            ease: "power3.out",
+            overwrite: true,
+          });
+        }
+      });
+      gsap.to(ctaRef.current, {
+        opacity: open ? 0 : 1,
+        scale: open ? 0.94 : 1,
+        duration: fast ? 0 : 0.45,
+        ease: "power3.out",
+        overwrite: true,
+      });
+    },
+    { dependencies: [selected, flipped] },
+  );
 
   useLayoutEffect(() => {
     if (selected === null) return;
     const card = stageRef.current.children[selected];
-    card.querySelector(flipped ? "[data-show-image]" : "[data-bf-front]").focus({ preventScroll: true });
+    card
+      .querySelector(flipped ? "[data-show-image]" : "[data-bf-front]")
+      .focus({ preventScroll: true });
   }, [selected, flipped]);
 
   useEffect(() => {
     if (selected === null) return;
     const onKey = (event) => {
-      if (event.key !== "Escape" || document.querySelector("dialog[open]")) return;
-      const front = stageRef.current.children[selected].querySelector("[data-bf-front]");
+      if (event.key !== "Escape" || document.querySelector("dialog[open]"))
+        return;
+      const front =
+        stageRef.current.children[selected].querySelector("[data-bf-front]");
       select(null);
       front.inert = false;
       front.focus({ preventScroll: true });
@@ -280,9 +340,17 @@ export const BuildCtaSection = () => {
                     data-bf-front
                     tabIndex={-1}
                     inert={showBack}
-                    aria-label={active ? `Show details for ${project.title}` : project.title}
+                    aria-label={
+                      active
+                        ? `Show details for ${project.title}`
+                        : project.title
+                    }
                     onClick={() => (active ? setFlipped(true) : select(i))}
-                    className={cn(FACE, "block size-full cursor-pointer border-0 bg-[#16161a] p-0", YELLOW_RING)}
+                    className={cn(
+                      FACE,
+                      "block size-full cursor-pointer border-0 bg-[#16161a] p-0",
+                      YELLOW_RING,
+                    )}
                   >
                     <img
                       src={project.image}
@@ -314,7 +382,9 @@ export const BuildCtaSection = () => {
                           key={tag}
                           className={cn(
                             "rounded-full px-3 py-[5px] text-[clamp(10px,0.67vw,14px)]",
-                            j === 0 ? "bg-[#17171b] text-white" : "bg-[#f0f0f4] text-[#555264]",
+                            j === 0
+                              ? "bg-[#17171b] text-white"
+                              : "bg-[#f0f0f4] text-[#555264]",
                           )}
                         >
                           {tag}
@@ -356,7 +426,10 @@ export const BuildCtaSection = () => {
             selected !== null && "pointer-events-none",
           )}
         >
-          <h2 id="bf-heading" className="m-0 whitespace-nowrap text-[clamp(26px,2vw,34px)] font-normal tracking-[-0.03em] text-white">
+          <h2
+            id="bf-heading"
+            className="m-0 whitespace-nowrap text-[clamp(26px,2vw,34px)] font-normal tracking-[-0.03em] text-white"
+          >
             {BUILD_CTA.title}
           </h2>
           <button
@@ -365,7 +438,8 @@ export const BuildCtaSection = () => {
             data-hover=""
             {...hoverTo({
               scale: 1.03,
-              boxShadow: "0 0 0 8px rgba(255,255,255,0.12), 0 26px 70px rgba(0,0,0,0.7), inset 0 -3px 8px rgba(0,0,0,0.08)",
+              boxShadow:
+                "0 0 0 8px rgba(255,255,255,0.12), 0 26px 70px rgba(0,0,0,0.7), inset 0 -3px 8px rgba(0,0,0,0.08)",
               duration: 0.35,
               ease: "power3.out",
             })}
@@ -379,19 +453,35 @@ export const BuildCtaSection = () => {
             <span
               aria-hidden="true"
               className="pointer-events-none absolute inset-0 -translate-x-[120%] bg-[linear-gradient(100deg,transparent_30%,rgba(255,255,255,0.9)_48%,transparent_66%)] motion-reduce:hidden"
-              {...hoverTo({ xPercent: 240, duration: 0.9, ease: "power1.inOut" })}
+              {...hoverTo({
+                xPercent: 240,
+                duration: 0.9,
+                ease: "power1.inOut",
+              })}
             />
             <span className="grid size-16 flex-none place-items-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_35%_30%,#3a3a33,#111_70%)] max-sm:size-12">
               {HERO.avatar ? (
-                <img src={HERO.avatar} alt="" className="size-full object-cover" />
+                <img
+                  src={HERO.avatar}
+                  alt=""
+                  className="size-full object-cover"
+                />
               ) : (
-                <img src="/svgs/icon.svg" alt="" className="size-[46%] object-contain" />
+                <img
+                  src="/svgs/icon.svg"
+                  alt=""
+                  className="size-[46%] object-contain"
+                />
               )}
             </span>
             <span className="flex flex-col gap-[3px]">
               <span className="inline-flex items-center gap-2.5 whitespace-nowrap text-[clamp(20px,1.45vw,24px)] tracking-[-0.03em] max-sm:text-[18px]">
                 {BUILD_CTA.button}
-                <VideoCameraIcon weight="fill" className="text-[0.9em] text-[#ffc400]" aria-hidden="true" />
+                <VideoCameraIcon
+                  weight="fill"
+                  className="text-[0.9em] text-[#ffc400]"
+                  aria-hidden="true"
+                />
               </span>
               <span className="whitespace-nowrap font-home-mono text-[clamp(12px,0.8vw,14px)] font-medium leading-[1.3] text-[#5e5c70] max-sm:text-[11px]">
                 {BUILD_CTA.subtitle}

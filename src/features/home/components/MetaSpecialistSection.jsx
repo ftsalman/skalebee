@@ -5,7 +5,6 @@ import { useGSAP } from "@gsap/react";
 import {
   ArrowDownIcon,
   ArrowRightIcon,
-  AsteriskIcon,
   FacebookLogoIcon,
   FigmaLogoIcon,
   GoogleLogoIcon,
@@ -27,6 +26,7 @@ gsap.registerPlugin(useGSAP);
 // Dark bento palette
 const CARD = "rounded-[14px] border border-[#262626] bg-[#0e0e0e]";
 const MUTED = "text-[#a3a3a3]";
+const SKILL_CHIP = "inline-flex min-h-10 items-center gap-2 rounded-xl bg-white px-[15px] py-2 font-home-mono text-sm leading-5 text-[#414259]";
 const META_BLUE = "#0866ff";
 const LINK = cn("inline-flex items-center gap-2 text-[15px]", MUTED);
 const LINK_HOVER = { "data-hover": "", ...hoverTo({ color: "#ffffff", gap: 12, duration: 0.25 }) };
@@ -187,7 +187,20 @@ export const MetaSpecialistSection = () => {
                 {p}
               </p>
             ))}
-            <AsteriskIcon className="mt-[18px] mb-auto" size={26} weight="bold" aria-hidden="true" />
+            <div id="founder-skills" className="mt-2 mb-auto scroll-mt-8 border-t border-[#303030] pt-5">
+              <h3 className="mb-[18px] font-home-mono text-sm font-medium text-[#dddde5]">Skills and tools I work with</h3>
+              <ul aria-label="Skills" className="flex flex-wrap gap-2.5">
+                {person.skills.map(skill => <li key={skill} className={SKILL_CHIP}>{skill}</li>)}
+              </ul>
+              <ul aria-label="Tools" className="mt-2.5 flex flex-wrap gap-2.5">
+                {person.tools.map(({ name, icon }) => (
+                  <li key={name} className={SKILL_CHIP}>
+                    <img src={icon} alt="" width="20" height="20" loading="lazy" className="size-5 shrink-0 object-contain" />
+                    {name}
+                  </li>
+                ))}
+              </ul>
+            </div>
             <Link to="/#contact" className={cn(LINK, "mt-7")} {...LINK_HOVER}>
               {person.cta} <ArrowRightIcon size={14} aria-hidden="true" />
             </Link>

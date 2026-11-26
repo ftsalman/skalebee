@@ -17,9 +17,6 @@ export default function useHomeMotion(scopeRef) {
           scrollTrigger: { trigger: image.closest("[data-home-parallax-frame]"), start: "top bottom", end: "bottom top", scrub: 0.5, invalidateOnRefresh: true },
         });
       });
-      q("[data-home-step]").forEach((step) => {
-        gsap.from(step, { opacity: 0.3, y: 35, ease: "none", scrollTrigger: { trigger: step, start: "top 88%", end: "top 55%", scrub: 0.4 } });
-      });
     });
     // Font metrics can move individual triggers even if the page height stays the same.
     let active = true;
