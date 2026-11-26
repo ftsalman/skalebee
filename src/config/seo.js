@@ -13,11 +13,14 @@ export const SITE = {
   name: "Skalebee",
   // Shown in Google results as "Page title | Skalebee"
   titleTemplate: "%s | Skalebee",
-  defaultTitle: "Skalebee | Meta Ads, Google Ads & Digital Marketing Agency in India",
+  defaultTitle: "Skalebee | Digital Marketing Agency in Kerala & Dubai",
   description:
-    "Skalebee is a Meta Business Partner and digital marketing agency in India. Meta Ads, Google Ads, SEO, websites and WhatsApp automation, from the first lead to the final sale.",
+    "Skalebee is a Meta Business Partner and digital marketing agency in Kerala and Dubai. Meta Ads, Google Ads, SEO, websites and WhatsApp automation, from the first lead to the final sale.",
   keywords: [
+    "digital marketing agency Kerala",
+    "digital marketing agency Dubai",
     "digital marketing agency India",
+    "SEO company UAE",
     "Meta Ads agency",
     "Facebook ads agency",
     "Instagram ads",
@@ -40,14 +43,25 @@ export const SITE = {
   twitterHandle: "", // e.g. "@skalebee"
 
   // Business details for Google's structured data (Knowledge Panel / rich results).
+  // Must match the Google Business Profile and directory listings exactly (same name, address, phone).
+  // Only the real office goes in the address: Dubai is listed under areaServed, not as an address.
   business: {
     type: "ProfessionalService",
-    email: "", // e.g. "hello@skalebee.com"
-    telephone: "", // e.g. "+91 98765 43210"
+    legalName: "Sharaco Technologies Pvt Ltd",
+    email: "hello@skalebee.com",
+    telephone: "+91 90378 37100",
+    street: "Mele Pattambi",
+    city: "Pattambi",
+    region: "Kerala",
+    postalCode: "679303",
     country: "IN",
-    region: "", // e.g. "Kerala"
-    city: "", // e.g. "Kochi"
-    areaServed: "Worldwide",
+    // schema.org Place types: Country, State, City
+    areaServed: [
+      { type: "State", name: "Kerala" },
+      { type: "Country", name: "India" },
+      { type: "City", name: "Dubai" },
+      { type: "Country", name: "United Arab Emirates" },
+    ],
     foundingYear: "2024",
     // Full URLs of your real social profiles (Instagram, LinkedIn, Facebook, YouTube...)
     sameAs: [],

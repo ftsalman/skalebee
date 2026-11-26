@@ -25,8 +25,10 @@ const structuredData = (siteUrl) => {
     b.city || b.region || b.country
       ? {
           "@type": "PostalAddress",
+          ...(b.street && { streetAddress: b.street }),
           ...(b.city && { addressLocality: b.city }),
           ...(b.region && { addressRegion: b.region }),
+          ...(b.postalCode && { postalCode: b.postalCode }),
           ...(b.country && { addressCountry: b.country }),
         }
       : undefined;
@@ -38,6 +40,7 @@ const structuredData = (siteUrl) => {
         "@type": b.type,
         "@id": orgId,
         name: SITE.name,
+        ...(b.legalName && { legalName: b.legalName }),
         url: `${siteUrl}/`,
         logo: absolute(siteUrl, SITE.logo),
         image: absolute(siteUrl, SITE.ogImage),
@@ -46,7 +49,7 @@ const structuredData = (siteUrl) => {
         ...(b.telephone && { telephone: b.telephone }),
         ...(address && { address }),
         ...(b.foundingYear && { foundingDate: b.foundingYear }),
-        areaServed: b.areaServed,
+        areaServed: b.areaServed.map((place) => ({ "@type": place.type, name: place.name })),
         ...(b.sameAs.length && { sameAs: b.sameAs }),
         knowsAbout: SITE.keywords,
         hasOfferCatalog: {

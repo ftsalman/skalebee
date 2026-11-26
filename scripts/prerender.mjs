@@ -193,6 +193,9 @@ const main = async () => {
           .replace(/</g, "&lt;");
       let out = template
         .replace("</head>", `${guard}</head>`)
+        // The <noscript> summary from seo.plugin.js is only a fallback for when prerendering is
+        // skipped; with the real content in place it would just repeat it (and add a second <h1>).
+        .replace(/<noscript><main>[\s\S]*?<\/main><\/noscript>\s*/, "")
         .replace(
           '<div id="root"></div>',
           `<div id="root" data-prerendered>${html}</div>`,

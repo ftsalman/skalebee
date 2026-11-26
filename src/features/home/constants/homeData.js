@@ -21,12 +21,12 @@ export const HERO = {
 
 // Hero side walls: "work" tiles on two walls that run into the screen.
 // Tiles are spread over the columns automatically; add as many as you like.
-// Simplest: { kind: "photo", image: "/imgs/...jpg" }  or  { kind: "video", video: "/videos/...mp4", poster: "..." }
+// Simplest: { kind: "photo", image: "/imgs/...webp" }  or  { kind: "video", video: "/videos/...mp4", poster: "..." }
 // Mockups (built from your photos): ad, insta, phone, site, dashboard, chat, search, stat
 export const HERO_WALL = [
-  // Work samples (files in /public/imgs/hero). Add more as { kind: "photo", image: "/imgs/hero/....jpg" }
-  { kind: "photo", image: "/imgs/hero/work-1.jpg" },
-  { kind: "photo", image: "/imgs/hero/work-2.jpg" },
+  // Work samples (files in /public/imgs/hero). Add more as { kind: "photo", image: "/imgs/hero/....webp" }
+  { kind: "photo", image: "/imgs/hero/work-1.webp" },
+  { kind: "photo", image: "/imgs/hero/work-2.webp" },
   {
     kind: "stat",
     stat: "24/7",
@@ -34,9 +34,9 @@ export const HERO_WALL = [
     tag: "Automation",
     theme: "yellow",
   },
-  { kind: "photo", image: "/imgs/hero/work-3.jpg" },
-  { kind: "photo", image: "/imgs/hero/work-4.jpg" },
-  { kind: "photo", image: "/imgs/hero/work-5.jpg" },
+  { kind: "photo", image: "/imgs/hero/work-3.webp" },
+  { kind: "photo", image: "/imgs/hero/work-4.webp" },
+  { kind: "photo", image: "/imgs/hero/work-5.webp" },
   {
     kind: "stat",
     stat: "UAE + India",
@@ -44,9 +44,9 @@ export const HERO_WALL = [
     tag: "Skalebee",
     theme: "dark",
   },
-  { kind: "photo", image: "/imgs/hero/work-6.jpg" },
-  { kind: "photo", image: "/imgs/hero/work-7.jpg" },
-  { kind: "photo", image: "/imgs/hero/work-8.jpg" },
+  { kind: "photo", image: "/imgs/hero/work-6.webp" },
+  { kind: "photo", image: "/imgs/hero/work-7.webp" },
+  { kind: "photo", image: "/imgs/hero/work-8.webp" },
   {
     kind: "stat",
     stat: "Meta",
@@ -54,9 +54,9 @@ export const HERO_WALL = [
     tag: "Certified",
     theme: "blue",
   },
-  { kind: "photo", image: "/imgs/hero/work-9.jpg" },
-  { kind: "photo", image: "/imgs/hero/work-10.jpg" },
-  { kind: "photo", image: "/imgs/hero/work-11.jpg" },
+  { kind: "photo", image: "/imgs/hero/work-9.webp" },
+  { kind: "photo", image: "/imgs/hero/work-10.webp" },
+  { kind: "photo", image: "/imgs/hero/work-11.webp" },
   {
     kind: "stat",
     stat: "8 steps",
@@ -207,74 +207,74 @@ export const WORK_SAMPLES = [
   {
     client: "Productivity dashboard",
     category: "Product design",
-    image: "/imgs/hero/work-8.jpg",
+    image: "/imgs/hero/work-8.webp",
     tags: ["Web app", "UI design"],
   },
   {
     client: "Web studio launch",
     category: "Launch campaign",
-    image: "/imgs/hero/work-1.jpg",
+    image: "/imgs/hero/work-1.webp",
     fit: "contain",
     tags: ["Social", "Launch"],
   },
   {
     client: "Influencer agency",
     category: "Website",
-    image: "/imgs/hero/work-6.jpg",
+    image: "/imgs/hero/work-6.webp",
     fit: "contain",
     tags: ["Website", "Landing page"],
   },
   {
     client: "Audio store",
     category: "E-commerce",
-    image: "/imgs/hero/work-9.jpg",
+    image: "/imgs/hero/work-9.webp",
     tags: ["E-commerce", "UI design"],
   },
   {
     client: "Digital marketing course",
     category: "Ad creative",
-    image: "/imgs/hero/work-2.jpg",
+    image: "/imgs/hero/work-2.webp",
     fit: "contain",
     tags: ["Meta Ads", "Creative"],
   },
   {
     client: "Podcast platform",
     category: "Website",
-    image: "/imgs/hero/work-7.jpg",
+    image: "/imgs/hero/work-7.webp",
     fit: "contain",
     tags: ["Website", "UI design"],
   },
   {
     client: "App studio",
     category: "Ad creative",
-    image: "/imgs/hero/work-4.jpg",
+    image: "/imgs/hero/work-4.webp",
     fit: "contain",
     tags: ["Ads", "Creative"],
   },
   {
     client: "B2B testimonials",
     category: "Website",
-    image: "/imgs/hero/work-11.jpg",
+    image: "/imgs/hero/work-11.webp",
     tags: ["Website", "Trust"],
   },
   {
     client: "Gadget brand flyers",
     category: "Social media",
-    image: "/imgs/hero/work-3.jpg",
+    image: "/imgs/hero/work-3.webp",
     fit: "contain",
     tags: ["Social", "Design"],
   },
   {
     client: "Videomaker course",
     category: "Lead generation",
-    image: "/imgs/hero/work-5.jpg",
+    image: "/imgs/hero/work-5.webp",
     fit: "contain",
     tags: ["Meta Ads", "Leads"],
   },
   {
     client: "Streaming app concept",
     category: "Product concept",
-    image: "/imgs/hero/work-10.jpg",
+    image: "/imgs/hero/work-10.webp",
     fit: "contain",
     tags: ["Product", "Concept"],
   },
@@ -464,25 +464,25 @@ export const LEAD_TO_SALES = {
   steps: [
     {
       title: "Get found",
-      image: "/imgs/home/fashion.jpg",
+      image: "/imgs/home/fashion.webp",
       text: "SEO, Google Ads and Meta Ads bring the right people to you.",
       tags: ["SEO", "Google Ads", "Meta Ads"],
     },
     {
       title: "Capture leads",
-      image: "/imgs/home/workspace.jpg",
+      image: "/imgs/home/workspace.webp",
       text: "Websites and landing pages built to turn visitors into enquiries.",
       tags: ["Websites", "Landing pages"],
     },
     {
       title: "Follow up fast",
-      image: "/imgs/home/coffee.jpg",
+      image: "/imgs/home/coffee.webp",
       text: "WhatsApp automation replies instantly, 24/7, and keeps every lead warm.",
       tags: ["WhatsApp Automation"],
     },
     {
       title: "Close the sale",
-      image: "/imgs/home/skincare.jpg",
+      image: "/imgs/home/skincare.webp",
       text: "Simple scripts and follow-ups help your team close the sale.",
       tags: ["Closing guides", "Follow-ups"],
     },
@@ -720,77 +720,77 @@ export const BUILD_CTA = {
   // it and show the title + tags on the back. Landscape images look best.
   projects: [
     {
-      image: "/imgs/hero/work-1.jpg",
+      image: "/imgs/hero/work-1.webp",
       title: "Launch announcement creative for a web studio going live",
       tags: ["Social", "Launch"],
     },
     {
-      image: "/imgs/hero/work-2.jpg",
+      image: "/imgs/hero/work-2.webp",
       title: "Course ad covering Meta Ads, Google Ads and SEO",
       tags: ["Meta Ads", "Creative"],
     },
     {
-      image: "/imgs/hero/work-3.jpg",
+      image: "/imgs/hero/work-3.webp",
       title: "Social media flyer set for a gadget brand",
       tags: ["Social", "Design"],
     },
     {
-      image: "/imgs/hero/work-4.jpg",
+      image: "/imgs/hero/work-4.webp",
       title: "App studio ad: turning ideas into apps",
       tags: ["Ads", "Creative"],
     },
     {
-      image: "/imgs/hero/work-5.jpg",
+      image: "/imgs/hero/work-5.webp",
       title: "Lead-generation ad for a videomaker course",
       tags: ["Meta Ads", "Leads"],
     },
     {
-      image: "/imgs/hero/work-6.jpg",
+      image: "/imgs/hero/work-6.webp",
       title: "Influencer agency landing page",
       tags: ["Website", "UI"],
     },
     {
-      image: "/imgs/hero/work-7.jpg",
+      image: "/imgs/hero/work-7.webp",
       title: "Podcast platform homepage",
       tags: ["Website", "UI"],
     },
     {
-      image: "/imgs/hero/work-8.jpg",
+      image: "/imgs/hero/work-8.webp",
       title: "Productivity app dashboard",
       tags: ["Product", "UI"],
     },
     {
-      image: "/imgs/hero/work-9.jpg",
+      image: "/imgs/hero/work-9.webp",
       title: "Audio store e-commerce experience",
       tags: ["E-commerce", "UI"],
     },
     {
-      image: "/imgs/hero/work-10.jpg",
+      image: "/imgs/hero/work-10.webp",
       title: "Streaming app concept for a spatial display",
       tags: ["Product", "Concept"],
     },
     {
-      image: "/imgs/hero/work-11.jpg",
+      image: "/imgs/hero/work-11.webp",
       title: "Testimonial section for a B2B website",
       tags: ["Website", "Trust"],
     },
     {
-      image: "/imgs/home/fashion.jpg",
+      image: "/imgs/home/fashion.webp",
       title: "Product shoot for an apparel drop",
       tags: ["E-commerce", "Photo"],
     },
     {
-      image: "/imgs/home/coffee.jpg",
+      image: "/imgs/home/coffee.webp",
       title: "Campaign visual for a coffee brand",
       tags: ["Meta Ads", "Photo"],
     },
     {
-      image: "/imgs/home/skincare.jpg",
+      image: "/imgs/home/skincare.webp",
       title: "Product ads for a skincare launch",
       tags: ["Meta Ads", "Photo"],
     },
     {
-      image: "/imgs/home/workspace.jpg",
+      image: "/imgs/home/workspace.webp",
       title: "Brand imagery for a SaaS CRM",
       tags: ["SaaS", "Photo"],
     },
