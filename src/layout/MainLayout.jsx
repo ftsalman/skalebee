@@ -16,12 +16,14 @@ export const MainLayout = () => {
   // The navbar is a dock floating at the bottom of the screen, so pages need no top
   // offset for it; non-home pages just get a little breathing room at the top.
   const isHome = pathname === ROUTES.HOME;
+  // These pages set their own top spacing (and a white background up to the top edge).
+  const ownTopSpacing = isHome || pathname === "/about" || pathname.startsWith(ROUTES.SERVICES);
 
   return (
     <div className="flex min-h-dvh flex-col bg-bee-cream">
       <Navbar />
       {/* Full width: each page/section sets its own container */}
-      <main id="main-content" tabIndex={-1} className={`flex flex-1 flex-col ${isHome || pathname === "/about" ? "" : "pt-12 lg:pt-20"}`}>
+      <main id="main-content" tabIndex={-1} className={`flex flex-1 flex-col ${ownTopSpacing ? "" : "pt-12 lg:pt-20"}`}>
         <Outlet />
       </main>
       <Footer rounded={isHome} />

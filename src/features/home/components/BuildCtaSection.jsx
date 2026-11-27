@@ -460,7 +460,7 @@ export const BuildCtaSection = () => {
                 ease: "power1.inOut",
               })}
             />
-            <span className="grid size-16 flex-none place-items-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_35%_30%,#3a3a33,#111_70%)] max-sm:size-12">
+            <span className="grid size-16 flex-none place-items-center overflow-hidden rounded-full bg-avatar max-sm:size-12">
               {HERO.avatar ? (
                 <img
                   src={HERO.avatar}

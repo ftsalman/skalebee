@@ -296,8 +296,11 @@ export const Navbar = () => {
   const isHome = pathname === ROUTES.HOME;
   const activeSection = useActiveSection(isHome);
   const isVisible = useDockVisible(isHome);
+  const onServicePage = pathname.startsWith(ROUTES.SERVICES);
   const activeIndex = NAV_LINKS.findIndex((l) =>
-    activeSection ? sectionId(l.to) === activeSection : l.to === pathname,
+    activeSection
+      ? sectionId(l.to) === activeSection
+      : l.to === pathname || (onServicePage && sectionId(l.to) === "services"),
   );
   const revealRef = useRef(null);
   const dockRef = useRef(null);

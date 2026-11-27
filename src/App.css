@@ -49,6 +49,12 @@
   --breakpoint-tablet: 701px;
 }
 
+/* Founder avatar circle (hero, contact form, "Book a call" button): bee yellow, lit from the
+   bottom left and deepening to amber at the top right. */
+@utility bg-avatar {
+  background-image: linear-gradient(60deg, #ffe45a 0%, #ffd400 25%, #f8c000 50%, #eea800 75%, #e69a00 100%);
+}
+
 html {
   /* Lenis animates the document scroll position frame by frame. */
   scroll-behavior: auto;
@@ -98,4 +104,24 @@ body {
 #about a:focus-visible [data-reveal-word] {
   opacity: 1 !important;
   filter: none !important;
+}
+
+@media (any-hover: hover) and (prefers-reduced-motion: no-preference) {
+  #certifications::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: inherit;
+    /* Amplify the gray ink while keeping the white paper white. */
+    filter: invert(1) brightness(4) invert(1);
+    mask-image: radial-gradient(circle 160px at var(--dot-position, center), black 15%, transparent 100%);
+    opacity: 0;
+    transition: opacity 240ms ease-out;
+  }
+
+  #certifications[data-dot-hover]::before {
+    opacity: 1;
+  }
 }

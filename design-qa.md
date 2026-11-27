@@ -47,3 +47,9 @@ The full Skalebee homepage is implemented inside the existing folder structure. 
 The numbered ruler and split card follow the supplied screenshots. The layout accommodates ten Skalebee services and stacks the illustration beneath the copy on phones.
 
 The production build and scoped ESLint checks passed. All ten WebM illustrations have matching WebP posters and readable durations. Chrome exposed the ten service tabs and the selected service panel in its accessibility tree. The image-to-code visual comparison remains blocked because Windows browser control could not verify the current URL. Desktop and mobile screenshots and live transition timing remain unverified.
+
+## Certificate background review, November 27, 2026
+
+The certificate section uses a lossless crop of the supplied gray dot pattern. The crop excludes the card edge and repeats vertically with a mirrored join. The asset passed a pixel comparison against the source crop, and Vite emitted the responsive background styles and image. The scoped ESLint check passed.
+
+Desktop and mobile visual comparison was blocked because the in-app browser host was unavailable.

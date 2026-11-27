@@ -5,6 +5,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
 import { cn } from "@turtle-ui/utils";
 import { hoverTo } from "@/hooks/useHoverMotion";
+import { Link } from "react-router-dom";
+import { ArrowRightIcon } from "@phosphor-icons/react";
+import { SERVICE_PAGES, servicePath } from "@/features/services/constants/servicesData";
 import { SERVICES, SERVICES_SECTION } from "../constants/homeData";
 
 gsap.registerPlugin(ScrollTrigger, useGSAP);
@@ -339,6 +342,7 @@ export const ServicesSection = () => {
   };
 
   const service = SERVICES[active];
+  const detail = SERVICE_PAGES.find((page) => page.artwork === service.artwork);
   return (
     // scroll-mt-0: the pinned panel already reserves space at the top
     <section id="services" ref={sectionRef} aria-labelledby="services-heading" className="scroll-mt-0!">
@@ -380,6 +384,19 @@ export const ServicesSection = () => {
                 <AnimatedText as="p" className="mt-4 mb-0 max-w-[37ch] text-[clamp(16px,1vw,18px)] leading-normal max-tablet:mt-[9px]">
                   {service.description}
                 </AnimatedText>
+                {detail && (
+                  <Link
+                    data-svc-enter
+                    data-hover=""
+                    to={servicePath(detail.slug)}
+                    className="mt-5 inline-flex items-center gap-2 text-[clamp(15px,0.95vw,17px)] text-svc-ink underline decoration-[#ced0dd] underline-offset-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bee-yellow max-tablet:mt-4"
+                  >
+                    How we run it
+                    <span className="inline-flex" {...hoverTo({ x: 4, duration: 0.25 })}>
+                      <ArrowRightIcon size={16} aria-hidden="true" />
+                    </span>
+                  </Link>
+                )}
               </div>
             </div>
             <div className="relative overflow-clip rounded-[20px] bg-[#e8eaf0] max-tablet:aspect-[1.57] max-tablet:rounded-2xl">

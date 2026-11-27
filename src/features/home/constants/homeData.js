@@ -622,6 +622,35 @@ const CREDLY = {
   messaging:
     "https://www.credly.com/badges/e7b10e2d-c717-48e1-8d1e-8c01c9c01d06/public_url",
 };
+
+// The founder's Meta badges in the certificates section.
+// Each badge links to its public Credly page. Add more as { name, issuer, src, alt, href }.
+export const CERTIFICATES = {
+  label: "Meta certified",
+  title: "Certified by Meta. Verified on Credly.",
+  description:
+    "Our founder, Shakkeer, holds two Meta certifications: Digital Marketing Associate and Business Messaging Strategy. Tap a badge to check it on Credly.",
+  badges: [
+    {
+      name: "Digital Marketing Associate",
+      issuer: "Meta Certification",
+      src: "/imgs/brand/meta-digital-marketing-associate.png",
+      width: 320,
+      height: 320,
+      alt: "Meta Certified Digital Marketing Associate badge",
+      href: CREDLY.associate,
+    },
+    {
+      name: "Business Messaging Strategy",
+      issuer: "Meta Certified Skill",
+      src: "/imgs/brand/meta-business-messaging-strategy.png",
+      width: 263,
+      height: 320,
+      alt: "Meta Certified Skill: Business Messaging Strategy badge",
+      href: CREDLY.messaging,
+    },
+  ],
+};
 export const META_SPECIALIST = {
   label: "Meta certified",
   stats: [

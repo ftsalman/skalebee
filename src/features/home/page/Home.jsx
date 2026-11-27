@@ -16,6 +16,7 @@ import {
   ReviewsSection,
 } from "../components/BusinessSections";
 import { MetaSpecialistSection } from "../components/MetaSpecialistSection";
+import { CertificatesSection } from "../components/CertificatesSection";
 import { ServicesSection } from "../components/ServicesSection";
 import { ProcessSection } from "../components/ProcessSection";
 import { BriefSection } from "@/features/contact/BriefSection";
@@ -53,7 +54,9 @@ export const Home = () => {
       <FeaturedWork />
       {/* 4. Who we are */}
       <MetaSpecialistSection />
-      {/* <CertificationsSection /> */}
+      {/* Target of the "Verify on Credly" link */}
+      <CertificatesSection />
+      {/* <CertificationsSection /> (old bento version; uses the same #certifications id) */}
       {/* 5. How we work */}
       <ProcessSection />
       <ReviewsSection />

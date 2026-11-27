@@ -475,7 +475,7 @@ export const Hero = () => {
 
       <div className="flex max-w-[900px] flex-col items-center px-6 pt-[110px] pb-[60px] text-center max-sm:max-w-full max-sm:px-7 max-sm:pt-[120px] max-sm:pb-16">
         <div
-          className="grid size-[90px] place-items-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_35%_30%,#3a3a33,#111_70%)] max-sm:size-[78px]"
+          className="grid size-[90px] place-items-center overflow-hidden rounded-full bg-avatar max-sm:size-[78px]"
           data-animate="scale-in"
           data-start="top bottom"
         >

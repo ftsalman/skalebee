@@ -11,12 +11,12 @@ import http from "node:http";
 import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
+import { INDEXABLE_ROUTES, prerenderFile } from "../src/config/seo.js";
 
 const DIST = path.resolve("dist");
-// Indexable pages (see src/config/seo.js). "/" -> index.html, others -> <route>.html
-const ROUTES = ["/", "/contact"];
-const fileFor = (route) =>
-  route === "/" ? "index.html" : `${route.slice(1)}.html`;
+// Indexable pages (see src/config/seo.js). "/" -> index.html, "/services/seo" -> services--seo.html
+const ROUTES = INDEXABLE_ROUTES;
+const fileFor = prerenderFile;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const findBrowser = () => {

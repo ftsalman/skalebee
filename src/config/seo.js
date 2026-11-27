@@ -2,6 +2,11 @@
 // Used in the browser (per-page <head> tags) AND at build time by vite.config.js
 // (static tags in index.html, structured data, sitemap.xml and robots.txt).
 // Keep this file plain JS (no JSX, no "@/..." imports) so vite.config.js can import it.
+import {
+  SERVICES_INDEX,
+  SERVICE_PAGES,
+  servicePath,
+} from "../features/services/constants/servicesData.js";
 
 // IMPORTANT: set your real domain in .env.production -> VITE_SITE_URL=https://www.yourdomain.com
 const FALLBACK_SITE_URL = "https://www.skalebee.com";
@@ -93,6 +98,24 @@ export const PAGES = {
     changefreq: "monthly",
     priority: 0.8,
   },
+  "/services": {
+    title: "Digital Marketing Services in Dubai & India",
+    description: SERVICES_INDEX.description,
+    changefreq: "monthly",
+    priority: 0.9,
+  },
+  // One page per service (src/features/services/constants/servicesData.js)
+  ...Object.fromEntries(
+    SERVICE_PAGES.map((service) => [
+      servicePath(service.slug),
+      {
+        title: service.name,
+        description: service.description,
+        changefreq: "monthly",
+        priority: 0.8,
+      },
+    ]),
+  ),
 };
 
 export const NOT_FOUND_PAGE = {
@@ -100,6 +123,14 @@ export const NOT_FOUND_PAGE = {
   description: "The page you are looking for could not be found.",
   noindex: true,
 };
+
+// Indexable routes: prerendered at build time and listed in sitemap.xml.
+export const INDEXABLE_ROUTES = Object.keys(PAGES).filter((p) => !PAGES[p].noindex);
+
+// File a route is prerendered into. Kept flat ("/services/seo" -> "services--seo.html") so
+// dist/ never gets a "services" folder, which Apache would serve instead of the /services page.
+export const prerenderFile = (route) =>
+  route === "/" ? "index.html" : `${route.slice(1).replace(/\//g, "--")}.html`;
 
 export const formatTitle = (page) =>
   page.absoluteTitle ? page.title : SITE.titleTemplate.replace("%s", page.title);

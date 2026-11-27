@@ -31,7 +31,7 @@ const MONO = "font-home-mono font-medium";
 
 const Avatar = () => (
   <span
-    className="grid size-[50px] flex-none place-items-center overflow-hidden rounded-full bg-[radial-gradient(circle_at_35%_30%,#3a3a33,#111_70%)]"
+    className="grid size-[50px] flex-none place-items-center overflow-hidden rounded-full bg-avatar"
     aria-hidden="true"
   >
     {HERO.avatar ? (
